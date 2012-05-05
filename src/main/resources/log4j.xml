@@ -17,7 +17,7 @@
             <param name="ImmediateFlush" value="true"/>
 
             <!-- file parameter is taken from the XML fragment, which is environment-specific -->
-            <param name="File" value="simplepfm.log"/> 
+            <param name="File" value="bsimple.log"/> 
 
             <layout class="org.apache.log4j.PatternLayout">
                   <param name="ConversionPattern" value="%d %p [%c] - %m%n"/>
