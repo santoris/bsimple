@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.santoris.bsimple.helpers.SimplePfmConstant;
+import com.santoris.bsimple.helpers.BSimpleConstant;
 import com.santoris.bsimple.model.Transaction;
 
 @Repository
@@ -27,7 +27,7 @@ public class TransactionDAO {
 	public List<Transaction> getTransactionList(String accountId, String customerId, String page) {
 		Transaction [] transactions = restTemplate.getForObject(baseUrl 
 				+ "/accounts/{accountId}/transactions?client_id={clientId}&access_token={accessToken}&customer_id={customerId}&count={count}&page={page}", 
-				Transaction[].class, accountId,clientId, accessToken, customerId, SimplePfmConstant.PAGE_SIZE, page);	
+				Transaction[].class, accountId,clientId, accessToken, customerId, BSimpleConstant.PAGE_SIZE, page);	
 		return Arrays.asList(transactions);
 	}
 
