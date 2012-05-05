@@ -1,4 +1,4 @@
-package com.octo.simplepfm.model;
+package com.santoris.bsimple.model;
 
 import java.math.BigDecimal;
 import java.util.Date;

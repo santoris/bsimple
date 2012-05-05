@@ -1,4 +1,4 @@
-package com.octo.simplepfm;
+package com.santoris.bsimple;
 
 import static org.easymock.EasyMock.createStrictMock;
 import static org.easymock.EasyMock.eq;
@@ -14,9 +14,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.octo.simplepfm.dao.AccountDAO;
-import com.octo.simplepfm.model.Account;
-import com.octo.simplepfm.model.AccountSummary;
+import com.santoris.bsimple.dao.AccountDAO;
+import com.santoris.bsimple.model.Account;
+import com.santoris.bsimple.model.AccountSummary;
 
 public class AccountDAOTest {
 	

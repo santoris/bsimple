@@ -1,4 +1,4 @@
-package com.octo.simplepfm;
+package com.santoris.bsimple;
 
 import static org.easymock.EasyMock.createStrictMock;
 import static org.easymock.EasyMock.replay;
@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.octo.simplepfm.dao.TransactionDAO;
-import com.octo.simplepfm.model.Transaction;
+import com.santoris.bsimple.dao.TransactionDAO;
+import com.santoris.bsimple.model.Transaction;
 
 public class TransactionDaoTest {
 	
