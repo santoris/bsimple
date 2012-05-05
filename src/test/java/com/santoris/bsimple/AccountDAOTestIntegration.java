@@ -1,4 +1,4 @@
-package com.octo.simplepfm;
+package com.santoris.bsimple;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -8,11 +8,11 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.octo.simplepfm.dao.AccountDAO;
-import com.octo.simplepfm.dao.BalanceDAO;
-import com.octo.simplepfm.model.Account;
-import com.octo.simplepfm.model.AccountSummary;
-import com.octo.simplepfm.model.Balance;
+import com.santoris.bsimple.dao.AccountDAO;
+import com.santoris.bsimple.dao.BalanceDAO;
+import com.santoris.bsimple.model.Account;
+import com.santoris.bsimple.model.AccountSummary;
+import com.santoris.bsimple.model.Balance;
 
 public class AccountDAOTestIntegration extends BaseSpringConfiguration {
 	

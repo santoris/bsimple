@@ -1,4 +1,4 @@
-package com.octo.simplepfm.controllers;
+package com.santoris.bsimple.controllers;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.common.collect.Lists;
-import com.octo.simplepfm.dao.BalanceDAO;
-import com.octo.simplepfm.model.Balance;
+import com.santoris.bsimple.dao.BalanceDAO;
+import com.santoris.bsimple.model.Balance;
 
 @RequestMapping("/customer/{customerId}/balances")
 @Controller

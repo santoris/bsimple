@@ -1,4 +1,4 @@
-package com.octo.simplepfm.form;
+package com.santoris.bsimple.form;
 
 public class ChooseCustomer {
 	

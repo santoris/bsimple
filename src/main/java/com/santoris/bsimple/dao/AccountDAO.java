@@ -1,4 +1,4 @@
-package com.octo.simplepfm.dao;
+package com.santoris.bsimple.dao;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.octo.simplepfm.model.Account;
-import com.octo.simplepfm.model.AccountSummary;
-import com.octo.simplepfm.model.Balance;
+import com.santoris.bsimple.model.Account;
+import com.santoris.bsimple.model.AccountSummary;
+import com.santoris.bsimple.model.Balance;
 
 @Repository
 public class AccountDAO {

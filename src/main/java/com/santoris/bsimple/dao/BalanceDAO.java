@@ -1,4 +1,4 @@
-package com.octo.simplepfm.dao;
+package com.santoris.bsimple.dao;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.octo.simplepfm.model.Balance;
+import com.santoris.bsimple.model.Balance;
 
 
 @Repository

@@ -1,4 +1,4 @@
-package com.octo.simplepfm;
+package com.santoris.bsimple;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,8 +7,8 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.octo.simplepfm.dao.TransactionDAO;
-import com.octo.simplepfm.model.Transaction;
+import com.santoris.bsimple.dao.TransactionDAO;
+import com.santoris.bsimple.model.Transaction;
 
 public class TransactionDaoTestIntegration extends BaseSpringConfiguration {
 	

@@ -1,4 +1,4 @@
-package com.octo.simplepfm.model;
+package com.santoris.bsimple.model;
 
 public class Account {
 	private Long id;

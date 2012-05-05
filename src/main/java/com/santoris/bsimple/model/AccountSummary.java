@@ -1,4 +1,4 @@
-package com.octo.simplepfm.model;
+package com.santoris.bsimple.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

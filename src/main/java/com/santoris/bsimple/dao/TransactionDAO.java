@@ -1,4 +1,4 @@
-package com.octo.simplepfm.dao;
+package com.santoris.bsimple.dao;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.octo.simplepfm.helpers.SimplePfmConstant;
-import com.octo.simplepfm.model.Transaction;
+import com.santoris.bsimple.helpers.SimplePfmConstant;
+import com.santoris.bsimple.model.Transaction;
 
 @Repository
 public class TransactionDAO {

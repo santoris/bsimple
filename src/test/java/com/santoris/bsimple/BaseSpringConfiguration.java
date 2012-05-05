@@ -1,4 +1,4 @@
-package com.octo.simplepfm;
+package com.santoris.bsimple;
 
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
