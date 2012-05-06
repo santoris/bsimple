@@ -2,7 +2,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
-<title>Simple PFM</title>
+<title>B Simple</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css" type="text/css" media="screen, projection" />
 <style>
 body {
@@ -23,7 +23,7 @@ body {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="${pageContext.request.contextPath}/">Simple PFM</a>
+          <a class="brand" href="${pageContext.request.contextPath}/">B Simple</a>
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
