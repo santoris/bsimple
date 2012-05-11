@@ -31,6 +31,15 @@
 		<finalName.versionLabel>${project.version}-${buildNumber}</finalName.versionLabel>
 		<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
 		<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
+		
+		<!-- Gwt conf -->
+		<gwtVersion>2.4.0</gwtVersion>
+		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+
+		<!-- General configuration -->
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<!-- Tests -->
@@ -51,6 +60,20 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<classifier>sources</classifier>
 			<scope>test</scope>
 		</dependency>
 
@@ -130,9 +153,25 @@
 			<version>2.0</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${gwtVersion}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwtVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
+
 		<finalName>${project.artifactId}-${finalName.versionLabel}</finalName>
+		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
 		<plugins>
 			<plugin>
@@ -219,6 +258,39 @@
 				<artifactId>jboss-as-maven-plugin</artifactId>
 				<version>7.1.0.CR1</version>
 				<extensions>false</extensions>
+			</plugin>
+			<plugin>
+				<groupId>br.com.ingenieux</groupId>
+				<artifactId>beanstalk-maven-plugin</artifactId>
+				<configuration>
+					<applicationName>My First Elastic Beanstalk Application</applicationName>
+					<cnamePrefix>Default-Environment-aws2wv7bpp</cnamePrefix><!-- cnamePrefix.elasticbeanstalk.com -->
+					<environmentName>Default-Environment</environmentName>
+					<s3Bucket>elasticbeanstalk-us-east-1-530005104459</s3Bucket>
+					<s3Key>${project.artifactId}/${project.build.finalName}-${beanstalk.versionLabel}.war</s3Key>
+				</configuration>
+			</plugin>
+			
+			<!-- GWT Maven Plugin -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>2.4.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
+					documentation at codehaus.org -->
+				<configuration>
+					<runTarget>App.html</runTarget>
+					<hostedWebapp>${webappDirectory}</hostedWebapp>
+					<module>com.santoris.bsimple.App</module>
+				</configuration>
 			</plugin>
 		</plugins>
 		<resources>
