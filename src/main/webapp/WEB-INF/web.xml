@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0"
-         xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         metadata-complete="false">
-    
-    <display-name>B Simple</display-name>
-    <welcome-file-list>
-         <welcome-file>App.html</welcome-file>
-    </welcome-file-list>
-    <listener>
-    	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	metadata-complete="false">
+
+	<display-name>B Simple</display-name>
+
+	<welcome-file-list>
+        <welcome-file>App.html</welcome-file>
+	</welcome-file-list>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	
 	 <!-- Servlets -->
@@ -18,30 +19,34 @@
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.santoris.bsimple.server.GreetingServiceImpl</servlet-class>
   </servlet>
-
-  <servlet-mapping>
+<servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
     <url-pattern>/App/greet</url-pattern>
   </servlet-mapping>
 
-   <servlet>
-        <servlet-name>dispatcher</servlet-name>
-        <servlet-class>
-            org.springframework.web.servlet.DispatcherServlet
-        </servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
-<!--         <servlet> -->
-<!--                   <servlet-name>health</servlet-name> -->
-<!--                   <jsp-file>/health.jsp</jsp-file> -->
-<!--          </servlet> -->
-<!--          <servlet-mapping> -->
-<!--                   <servlet-name>health</servlet-name> -->
-<!--                   <url-pattern>/health</url-pattern> -->
-<!--          </servlet-mapping> -->
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>health</servlet-name>
+		<jsp-file>/health.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>health</servlet-name>
+		<url-pattern>/health</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/build-number/*</url-pattern>
+	</servlet-mapping>
 </web-app>

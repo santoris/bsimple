@@ -7,6 +7,16 @@
 	<artifactId>bsimple</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
+	<developers>
+		<developer>
+			<name>Thierry Abaléa</name>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/${github.login}/bsimple</url>
+		<connection>scm:git:git://github.com/${github.login}/bsimple.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:${github.login}/bsimple.git</developerConnection>
+	</scm>
 	<repositories>
 		<repository>
 			<id>JBOSS_NEXUS</id>
@@ -14,16 +24,14 @@
 		</repository>
 	</repositories>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jackson.version>1.8.6</jackson.version>
 		<spring.version>3.1.1.RELEASE</spring.version>
 
-		<!-- for deployment on Amazon Beanstalk with beanstalker Maven plugin - 
-			begin -->
-		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
-		<beanstalk.versionLabel>${maven.build.timestamp}</beanstalk.versionLabel>
-		<!-- for deployment on Amazon Beanstalk with beanstalker Maven plugin - 
-			end -->
-
+		<finalName.versionLabel>${project.version}-${buildNumber}</finalName.versionLabel>
+		<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
+		<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
+		
 		<!-- Gwt conf -->
 		<gwtVersion>2.4.0</gwtVersion>
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
@@ -161,16 +169,44 @@
 
 	</dependencies>
 	<build>
-		<finalName>bsimple</finalName>
+
+		<finalName>${project.artifactId}-${finalName.versionLabel}</finalName>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
 					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<!-- Adds ${buildNumber} as an entry in the manifest file -->
+							<Git-SHA-1>${buildNumber}</Git-SHA-1>
+						</manifestEntries>
+					</archive>
+					<webResources>
+						<webResource>
+							<!-- Adds ${buildNumber} to header.jsp (i.e. 1st line of the head 
+								of index.html) -->
+							<directory>${basedir}/src/main/webapp/jsp</directory>
+							<targetPath>jsp</targetPath>
+							<filtering>true</filtering>
+						</webResource>
+					</webResources>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -201,6 +237,22 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- in case of issue because the buildnumber property is null, then execute 
+				also the validate phase, e.g. "mvn validate jboss:deploy". Or see the configuration 
+				for Jetty below to a similar configuration -->
 			<plugin>
 				<groupId>org.jboss.as.plugins</groupId>
 				<artifactId>jboss-as-maven-plugin</artifactId>
@@ -241,5 +293,54 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<!-- Adds ${buildNumber} to buildNumber.properties -->
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>deploy</id>
+			<build>
+				<defaultGoal>validate beanstalk:upload-source-bundle beanstalk:create-application-version beanstalk:update-environment</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>br.com.ingenieux</groupId>
+						<artifactId>beanstalk-maven-plugin</artifactId>
+						<version>0.2.6</version>
+						<configuration>
+							<applicationName>My First Elastic Beanstalk Application</applicationName>
+							<!-- cnamePrefix.elasticbeanstalk.com -->
+							<cnamePrefix>Default-Environment-aws2wv7bpp</cnamePrefix>
+							<environmentName>Default-Environment</environmentName>
+							<s3Bucket>elasticbeanstalk-us-east-1-530005104459</s3Bucket>
+							<s3Key>${project.artifactId}/${project.build.finalName}.war</s3Key>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>jetty</id>
+			<build>
+				<defaultGoal>validate jetty:run</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>jetty-maven-plugin</artifactId>
+						<version>8.0.4.v20111024</version>
+						<configuration>
+							<stopKey>foo</stopKey>
+							<stopPort>9999</stopPort>
+							<scanIntervalSeconds>5</scanIntervalSeconds>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

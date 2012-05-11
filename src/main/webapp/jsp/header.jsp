@@ -2,6 +2,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
+<!-- Git SHA-1: ${buildNumber} -->
 <title>B Simple</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css" type="text/css" media="screen, projection" />
 <style>
