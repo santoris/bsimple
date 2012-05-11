@@ -7,11 +7,22 @@
     
     <display-name>B Simple</display-name>
     <welcome-file-list>
-        <welcome-file>jsp/index.jsp</welcome-file>
+         <welcome-file>App.html</welcome-file>
     </welcome-file-list>
     <listener>
     	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	 <!-- Servlets -->
+  <servlet>
+    <servlet-name>greetServlet</servlet-name>
+    <servlet-class>com.santoris.bsimple.server.GreetingServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>greetServlet</servlet-name>
+    <url-pattern>/App/greet</url-pattern>
+  </servlet-mapping>
 
    <servlet>
         <servlet-name>dispatcher</servlet-name>
@@ -25,12 +36,12 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-        <servlet>
-                  <servlet-name>health</servlet-name>
-                  <jsp-file>/health.jsp</jsp-file>
-         </servlet>
-         <servlet-mapping>
-                  <servlet-name>health</servlet-name>
-                  <url-pattern>/health</url-pattern>
-         </servlet-mapping>
+<!--         <servlet> -->
+<!--                   <servlet-name>health</servlet-name> -->
+<!--                   <jsp-file>/health.jsp</jsp-file> -->
+<!--          </servlet> -->
+<!--          <servlet-mapping> -->
+<!--                   <servlet-name>health</servlet-name> -->
+<!--                   <url-pattern>/health</url-pattern> -->
+<!--          </servlet-mapping> -->
 </web-app>
