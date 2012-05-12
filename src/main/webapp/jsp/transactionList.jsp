@@ -31,13 +31,9 @@
 			<th>Account</th>
 			<th>Transaction Type</th>
 			<th>Entry Date</th>
-			<th>Accounting Date</th>
 			<th>Label</th>
 			<th>Amount</th>
 			<th>Currency</th>
-			<th>Transaction Date</th>
-			<th>Card Number</th>
-			<th>Card Type</th>
 		</tr>
 	</thead>
 	<c:forEach items="${transactions}" var="transaction">
@@ -46,13 +42,9 @@
 			<td>${transaction.account}</td>
 			<td>${transaction.transactionType}</td>
 			<td>${transaction.entryDate}</td>
-			<td>${transaction.accountingDate}</td>
 			<td>${transaction.label}</td>
 			<td>${transaction.amount}</td>
 			<td>${transaction.currency}</td>
-			<td>${transaction.transactionDate}</td>
-			<td>${transaction.cardNumber}</td>
-			<td>${transaction.cardType}</td>
 		</tr>
 	</c:forEach>
 </table>
