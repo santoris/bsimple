@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.santoris.bsimple.helpers.BSimpleConstant;
 import com.santoris.bsimple.model.Transaction;
+import com.santoris.bsimple.model.TransactionsWrapper;
 
 @Repository
 public class TransactionDAO {
@@ -25,10 +26,24 @@ public class TransactionDAO {
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	public List<Transaction> getTransactionList(String accountId, String customerId, String page) {
-		Transaction [] transactions = restTemplate.getForObject(baseUrl 
+		TransactionsWrapper transactionsWrapper = restTemplate.getForObject(baseUrl 
 				+ "/accounts/{accountId}/transactions?client_id={clientId}&access_token={accessToken}&customer_id={customerId}&count={count}&page={page}", 
-				Transaction[].class, accountId,clientId, accessToken, customerId, BSimpleConstant.PAGE_SIZE, page);	
-		return Arrays.asList(transactions);
+				TransactionsWrapper.class, accountId,clientId, accessToken, customerId, BSimpleConstant.PAGE_SIZE, page);
+		
+//		for (Transaction transaction : transactionsWrapper.getTransactions()) {
+//			if (transaction.getAtm() != null || transaction.getPointOfSale() != null || transaction.getForeignAmount() != null ||  transaction.getServiceCharge() != null) {
+//				System.out.println("transaction " + transaction.getId() + " (" + transaction.getLabel() + "), amount " + transaction.getAmount() + ", date " + transaction.getEntryDate() + ", atm <" + transaction.getAtm() + ">, point of sale <" + transaction.getPointOfSale() + ">, foreign amount <" + transaction.getForeignAmount() + ">");
+//			}
+//		}
+		
+		return Arrays.asList(transactionsWrapper.getTransactions());
+	}
+
+	public List<Transaction> getOutstandingTransactionList(String accountId, String customerId, String page) {
+		Transaction[] transactions = restTemplate.getForObject(baseUrl 
+					+ "/accounts/{accountId}/outstanding_transactions?client_id={clientId}&access_token={accessToken}&customer_id={customerId}&count={count}&page={page}", 
+					Transaction[].class, accountId,clientId, accessToken, customerId, BSimpleConstant.PAGE_SIZE, page);	
+			return Arrays.asList(transactions);
 	}
 
 }
