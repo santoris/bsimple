@@ -24,6 +24,16 @@ public class TransactionDaoTestIntegration extends BaseSpringConfiguration {
 		for (Transaction t : transactionList) {
 			System.out.println(t.getLabel());
 		}
-		
+	}
+
+	@Test
+	public void testOutstandingTransactionListOk() {
+		final String accountId = "20000001500";
+		final String customerId= "1000000";
+		List<Transaction> transactionList = transactionDao.getOutstandingTransactionList(accountId,customerId, "1");
+		assertTrue(transactionList.size() > 0);
+		for (Transaction t : transactionList) {
+			System.out.println(t.getLabel());
+		}
 	}
 }
