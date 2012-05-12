@@ -7,10 +7,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.santoris.bsimple.model.Balance;
+import com.santoris.bsimple.model.BalancesWrapper;
 
 
 @Repository
@@ -31,25 +31,23 @@ public class BalanceDAO {
 	
 	public Balance getBalanceForAccount(String accountId,String customerId) {
 		Balance balance;
-		try {
-			balance = restTemplate.getForObject(baseUrl + "/accounts/{accountId}/balance?client_id={clientId}&access_token={accessToken}&customer_id={customerId}",
-				Balance.class,
-				
-				accountId,clientId, accessToken, customerId);
-		} catch (HttpClientErrorException ex) {
-			balance = new Balance();
-			balance.setAmount(BigDecimal.ZERO);
-			logger.error("API Didn't give any balance for account " + accountId + " because : " + ex.getMessage());
-			logger.error("clientID :" + clientId + " accesstoken : " + accessToken);
-		}
+			List<Balance> balances = getBalanceListForAccount(accountId, customerId);
+			if (balances.size() == 0) {
+				balance = new Balance();
+				balance.setAmount(BigDecimal.ZERO);
+				logger.error("API Didn't give any balance for account " + accountId);
+				logger.error("clientID :" + clientId + " accesstoken : " + accessToken);
+			} else {
+				balance = balances.get(0);
+			}
 		return balance;
 	}
 
 	public List<Balance> getBalanceListForAccount(String accountId,
 			String customerId) {
-		Balance [] balances = restTemplate.getForObject(baseUrl + "/accounts/{accountId}/balances?client_id={clientId}&access_token={accessToken}&customer_id={customerId}",
-				Balance[].class,
+		BalancesWrapper wrapper = restTemplate.getForObject(baseUrl + "/accounts/{accountId}/balances?client_id={clientId}&access_token={accessToken}&customer_id={customerId}",
+				BalancesWrapper.class,
 				accountId,clientId, accessToken, customerId);
-		return Arrays.asList(balances);
+		return Arrays.asList(wrapper.getBalances());
 	}
 }

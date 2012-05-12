@@ -45,7 +45,6 @@ public class AccountDAO {
 		return accountList;
 	}
 	
-	
 	public Account getAccountById(String accountId,String customerId) {
 		Account account = restTemplate.getForObject(baseUrl + "/accounts/{accountId}?client_id={clientId}&access_token={accessToken}&customer_id={customerId}",
 				Account.class,

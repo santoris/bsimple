@@ -5,6 +5,28 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * https://developer.axabanque.fr/api/resource_TransactionService.html#path__transactions_-uid-.html
+ * 
+ * https://developer.axabanque.fr/api/resource_AccountService.html#path__accounts_-accountUid-_transactions.html
+ * 
+ * https://sandbox-api.axabanque.fr/accounts/20000001500/transactions?client_id=263552891477590181&access_token=649946458505090179&customer_id=1000000&count=2&page=0
+ * https://sandbox-api.axabanque.fr/accounts/20000001500/transactions?client_id=263552891477590181&access_token=649946458505090179&customer_id=1000000&count=10&page=0
+ * 
+ * {"has_more":true,
+ *  "transactions":
+ *    [{"id":2002834,"account":20000001500,"type":"check","date":"2012-01-26","currency":"EUR","amount":-45.440,"label":"CHEQUE No.4978494"},
+ *     {"id":2002833,"account":20000001500,"type":"check","date":"2012-01-25","currency":"EUR","amount":-412.990,"label":"CHEQUE No.4978493"},
+ *     {"id":2002831,"account":20000001500,"type":"atm","date":"2012-01-24","currency":"EUR","amount":-60.000,"label":"RETRAIT DAB 21/01 MONNAIE","atm":{"retrieval_date":"2012-01-24","amount":-60.000,"location":{"name":"SOCIETE GENERALE ","city":"COLOMIERS LE PER ","country":"250 "},"atm_id":{"bank_id":"30003 ","id":"00905783 "}}},
+ *     {"id":2002832,"account":20000001500,"type":"credit","date":"2012-01-24","currency":"EUR","amount":3900.000,"label":"VIRT DE SALAIRE JANVIER 2012"},
+ *     {"id":2002830,"account":20000001500,"type":"debit","date":"2012-01-24","currency":"EUR","amount":-2700.000,"label":"VIR REMISE 0 GASQUET CHEMINE"},
+ *     {"id":2002828,"account":20000001500,"type":"direct_debit","date":"2012-01-20","currency":"EUR","amount":-121.670,"label":"PRLV AGIPI"},
+ *     {"id":2002829,"account":20000001500,"type":"debit","date":"2012-01-20","currency":"EUR","amount":-300.000,"label":"VIR REVERSEMENT CAF"},
+ *     {"id":2002827,"account":20000001500,"type":"direct_debit","date":"2012-01-20","currency":"EUR","amount":-1500.000,"label":"PRLV FRANFINANCE"},
+ *     {"id":2002826,"account":20000001500,"type":"credit","date":"2012-01-18","currency":"EUR","amount":1000.000,"label":"VIRT DE SALAIRE JANVIER 2012"},
+ *     {"id":2002825,"account":20000001500,"type":"debit","date":"2012-01-16","currency":"EUR","amount":-75.000,"label":"VIR ETRENNES MAMIE"}]}
+ *
+ */
 public class Transaction {
 
 	private Long id;
@@ -14,38 +36,32 @@ public class Transaction {
 	@JsonProperty(value = "type")
 	private String transactionType;
 
+	/**
+	 * entryDate or accountingDate or transactionDate !?
+	 */
 	@JsonProperty(value = "date")
 	private Date entryDate;
 
-	@JsonProperty(value = "accounting_date")
-	private Date accountingDate;
-
-	private String label;
-
-	private BigDecimal amount;
-
 	private String currency;
 
-	@JsonProperty(value = "transaction_date")
-	private Date transactionDate;
+	private BigDecimal amount;
+	
+	/**
+	 * [ currency, amount ]
+	 */
+	@JsonProperty(value = "foreign_amount")
+	private String[] foreignAmount;
+	
+	private String label;
 
-	@JsonProperty("card_number")
-	private String cardNumber;
+	@JsonProperty(value = "service_charge")
+	private String[] serviceCharge;
+	
+	private ATM atm;
 
-	@JsonProperty(value = "card_type")
-	private String cardType;
-
-	private BigDecimal foreignAmount;
-
-	private String foreignCurrency;
-
-	private String entryType;
-
-	private String cancellationType;
-
-	private String internationalTransaction;
-
-
+	@JsonProperty(value = "point_of_sale")
+	private PointOfSale pointOfSale;
+	
 	public Transaction() {
 	}
 
@@ -56,8 +72,12 @@ public class Transaction {
 		this.label = label;
 		this.amount = amount;
 		this.currency = currency;
-		this.entryDate = this.accountingDate = date;
+		this.entryDate = date;
 		this.account = account;
+	}
+
+	protected String getResourceType() {
+		return "entry";
 	}
 
 	public Long getId() {
@@ -68,97 +88,12 @@ public class Transaction {
 		this.id = id;
 	}
 
-	public String getCardType() {
-		return cardType;
-	}
-
-	public void setCardType(String cardType) {
-		this.cardType = cardType;
-	}
-
 	public Long getAccount() {
 		return account;
 	}
 
-
-	public void setCardNumber(String cardNumber) {
-		this.cardNumber = cardNumber;
-	}
-
-	protected String getResourceType() {
-		return "entry";
-	}
-
-	public void setPublicId(Long id) {
-		setId(id);
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-	public BigDecimal getAmount() {
-		return amount;
-	}
-
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public BigDecimal getForeignAmount() {
-		return foreignAmount;
-	}
-
-	public void setForeignAmount(BigDecimal amount) {
-		this.foreignAmount = amount;
-	}
-
-	public String getForeignCurrency() {
-		return foreignCurrency;
-	}
-
-	public void setForeignCurrency(String currency) {
-		this.foreignCurrency = currency;
-	}
-
-	public Date getAccountingDate() {
-		return accountingDate;
-	}
-
-	public void setAccountingDate(Date date) {
-		this.accountingDate = date;
-	}
-
 	public void setAccount(Long account) {
 		this.account = account;
-	}
-
-	public Date getTransactionDate() {
-		return transactionDate;
-	}
-
-	public void setTransactionDate(Date transactionDate) {
-		this.transactionDate = transactionDate;
-	}
-
-	public Date getEntryDate() {
-		return entryDate;
-	}
-
-	public void setEntryDate(Date entryDate) {
-		this.entryDate = entryDate;
 	}
 
 	public String getTransactionType() {
@@ -169,36 +104,60 @@ public class Transaction {
 		this.transactionType = transactionType;
 	}
 
-	public String getEntryType() {
-		return entryType;
+	public Date getEntryDate() {
+		return entryDate;
 	}
 
-	public void setEntryType(String entryType) {
-		this.entryType = entryType;
+	public void setEntryDate(Date entryDate) {
+		this.entryDate = entryDate;
 	}
 
-	public String getCancellationType() {
-		return cancellationType;
+	public String getCurrency() {
+		return currency;
 	}
 
-	public void setCancellationType(String cancellationType) {
-		this.cancellationType = cancellationType;
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
-	public String getInternationalTransaction() {
-		return internationalTransaction;
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
-	public void setInternationalTransaction(String internationalTransaction) {
-		this.internationalTransaction = internationalTransaction;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 
-
-	public String getCardNumber() {
-		return cardNumber;
+	public String getLabel() {
+		return label;
 	}
 
-	public String geteCardType() {
-		return cardType;
+	public void setLabel(String label) {
+		this.label = label;
 	}
+
+	public ATM getAtm() {
+		return atm;
+	}
+
+	public void setAtm(ATM atm) {
+		this.atm = atm;
+	}
+
+	public PointOfSale getPointOfSale() {
+		return pointOfSale;
+	}
+
+	public void setPointOfSale(PointOfSale pointOfSale) {
+		this.pointOfSale = pointOfSale;
+	}
+
+	public String[] getForeignAmount() {
+		return foreignAmount;
+	}
+
+	public String[] getServiceCharge() {
+		return serviceCharge;
+	}
+
 }
