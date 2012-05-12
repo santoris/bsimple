@@ -4,4 +4,6 @@ target/
 .settings/
 tests.txt
 *.log
+*.log.*
 jenkins/
+.gwt
