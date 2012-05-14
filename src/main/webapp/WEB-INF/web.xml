@@ -7,22 +7,13 @@
 	<display-name>B Simple</display-name>
 
 	<welcome-file-list>
-        <welcome-file>App.html</welcome-file>
+		<!-- <welcome-file>jsp/index.jsp</welcome-file> -->
+		<welcome-file>App.html</welcome-file>
 	</welcome-file-list>
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
-	 <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.santoris.bsimple.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-<servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/App/greet</url-pattern>
-  </servlet-mapping>
 
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
@@ -30,10 +21,10 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>dispatcher</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+    <servlet>
+        <servlet-name>dispatcher-gwt</servlet-name>
+        <servlet-class>org.gwtrpcspring.RemoteServiceDispatcher</servlet-class>
+    </servlet>
 
 	<servlet>
 		<servlet-name>health</servlet-name>
@@ -48,5 +39,10 @@
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
 		<url-pattern>/build-number/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>dispatcher-gwt</servlet-name>
+		<url-pattern>/App/greet</url-pattern>
 	</servlet-mapping>
 </web-app>
