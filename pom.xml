@@ -22,6 +22,11 @@
 			<id>JBOSS_NEXUS</id>
 			<url>http://repository.jboss.org/nexus/content/groups/public</url>
 		</repository>
+
+		<repository>
+			<id>Octo Technology Nexus</id>
+			<url>http://forge.octo.com/nexus/content/groups/public</url>
+		</repository>
 	</repositories>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,18 +34,24 @@
 		<spring.version>3.1.1.RELEASE</spring.version>
 
 		<finalName.versionLabel>${project.version}-${buildNumber}</finalName.versionLabel>
-		<finalName>${project.artifactId}-${finalName.versionLabel}</finalName>
-		<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
-		<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
-		
-		<!-- Gwt conf -->
-		<gwtVersion>2.4.0</gwtVersion>
- 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+		<finalName>
+			${project.artifactId}-${finalName.versionLabel}
+		</finalName>
+			<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
+			<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
 
-		<!-- General configuration -->
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+			<!-- Gwt conf -->
+			<gwtVersion>2.4.0</gwtVersion>
+			<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+
+			<!-- MongoDB -->
+			<mongo.java.driver.version>2.7.3</mongo.java.driver.version>
+			<spring.data.mongodb.version>1.0.1.RELEASE</spring.data.mongodb.version>
+
+			<!-- General configuration -->
+			<maven.compiler.source>1.6</maven.compiler.source>
+			<maven.compiler.target>1.6</maven.compiler.target>
+			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<!-- Tests -->
@@ -89,6 +100,18 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
@@ -168,10 +191,27 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+		   <groupId>org.gwtrpcspring</groupId>
+		   <artifactId>gwtrpc-spring</artifactId>
+		   <version>1.01</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>${spring.data.mongodb.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo.java.driver.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-    
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -294,7 +334,7 @@
 				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
 					documentation at codehaus.org -->
 				<configuration>
-					<runTarget>App.html</runTarget>
+					<runTarget>/App.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<module>com.santoris.bsimple.App</module>
 				</configuration>

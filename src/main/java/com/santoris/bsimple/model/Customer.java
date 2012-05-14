@@ -1,38 +1,39 @@
 package com.santoris.bsimple.model;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * https://developer.axabanque.fr/api/resource_CustomerService.html#path__customers_-uid-.html
- * 
- * https://sandbox-api.axabanque.fr/customers/1000000?client_id=263552891477590181&access_token=649946458505090179
- * 
- * {"id":1000000,"third_party_id":"a12f90","label":"THEO"}
- *
- */
-public class Customer {
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.google.common.base.Objects;
+
+@SuppressWarnings("serial")
+@Document
+public class Customer implements Serializable {
+
+	private String id;
 	
-	private Long id;
-	
-	@JsonProperty(value = "third_party_id")
-	private String thirdPartyId;
-	
+	private Long bankId;
+
 	private String label;
 
-	public Long getId() {
+	private List<Account> accounts = new ArrayList<Account>();
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getThirdPartyId() {
-		return thirdPartyId;
+	public Long getBankId() {
+		return bankId;
 	}
 
-	public void setThirdPartyId(String thirdPartyId) {
-		this.thirdPartyId = thirdPartyId;
+	public void setBankId(Long id) {
+		this.bankId = id;
 	}
 
 	public String getLabel() {
@@ -43,4 +44,24 @@ public class Customer {
 		this.label = label;
 	}
 
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
+	
+	public void addAcount(Account account) {
+		this.accounts.add(account);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("id", id)
+				.add("bankId", bankId)
+				.add("label", label)
+				.toString();
+	}
 }
