@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='App'>
+<module rename-to='bsimple'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User' />
 
@@ -15,10 +15,15 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
+  <inherits name='com.github.gwtbootstrap.Bootstrap' />
+  <inherits name='gwtquery.plugins.droppable.Droppable'/>
+
+  <!-- set responsive design -->
+  <set-property name="bootstrap.responsiveDesign" value="true"/>
 
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='com.santoris.bsimple.client.App' />
-
+  <entry-point class='com.santoris.bsimple.client.Bsimple' />
+	
   <!-- Specify the paths for translatable code                    -->
   <source path='client' />
   <source path='shared' />

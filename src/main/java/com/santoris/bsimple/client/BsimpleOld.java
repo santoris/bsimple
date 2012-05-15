@@ -20,7 +20,7 @@ import com.santoris.bsimple.shared.FieldVerifier;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class App implements EntryPoint {
+public class BsimpleOld implements EntryPoint {
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.

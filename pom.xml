@@ -27,6 +27,17 @@
 			<id>Octo Technology Nexus</id>
 			<url>http://forge.octo.com/nexus/content/groups/public</url>
 		</repository>
+
+		<repository>
+			<id>gwt-bootstrap</id>
+			<name>GWT-Bootstrap SNAPSHOTS</name>
+			<url>http://gwtbootstrap.github.com/maven/snapshots</url>
+		</repository>
+
+		<repository>
+			<id>gwtquery-plugins</id>
+			<url>http://gwtquery-plugins.googlecode.com/svn/mavenrepo</url>
+		</repository>
 	</repositories>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,21 +48,21 @@
 		<finalName>
 			${project.artifactId}-${finalName.versionLabel}
 		</finalName>
-			<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
-			<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
+		<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
+		<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
 
-			<!-- Gwt conf -->
-			<gwtVersion>2.4.0</gwtVersion>
-			<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+		<!-- Gwt conf -->
+		<gwtVersion>2.4.0</gwtVersion>
+		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 
-			<!-- MongoDB -->
-			<mongo.java.driver.version>2.7.3</mongo.java.driver.version>
-			<spring.data.mongodb.version>1.0.1.RELEASE</spring.data.mongodb.version>
+		<!-- MongoDB -->
+		<mongo.java.driver.version>2.7.3</mongo.java.driver.version>
+		<spring.data.mongodb.version>1.0.1.RELEASE</spring.data.mongodb.version>
 
-			<!-- General configuration -->
-			<maven.compiler.source>1.6</maven.compiler.source>
-			<maven.compiler.target>1.6</maven.compiler.target>
-			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- General configuration -->
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<!-- Tests -->
@@ -192,10 +203,51 @@
 		</dependency>
 
 		<dependency>
-		   <groupId>org.gwtrpcspring</groupId>
-		   <artifactId>gwtrpc-spring</artifactId>
-		   <version>1.01</version>
+			<groupId>org.gwtrpcspring</groupId>
+			<artifactId>gwtrpc-spring</artifactId>
+			<version>1.01</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.gwtbootstrap</groupId>
+			<artifactId>gwt-bootstrap</artifactId>
+			<version>2.0.3.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.gwtquery</groupId>
+			<artifactId>gwtquery</artifactId>
+			<version>1.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.gwtquery.plugins</groupId>
+			<artifactId>draggable-plugin</artifactId>
+			<version>1.0.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.gwtquery.plugins</groupId>
+			<artifactId>droppable-plugin</artifactId>
+			<version>1.0.7</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.gwtquery.plugins</groupId>
+			<artifactId>enhance-plugin</artifactId>
+			<version>1.0.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.googlecode.gwtquery.bundles</groupId> -->
+<!-- 			<artifactId>gquery-dnd-bundle</artifactId> -->
+<!-- 			<version>1.0.5</version> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -334,9 +386,9 @@
 				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
 					documentation at codehaus.org -->
 				<configuration>
-					<runTarget>/App.html</runTarget>
+					<runTarget>bsimple.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
-					<module>com.santoris.bsimple.App</module>
+					<module>com.santoris.bsimple.bsimple</module>
 				</configuration>
 			</plugin>
 		</plugins>

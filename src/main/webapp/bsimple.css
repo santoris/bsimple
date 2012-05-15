@@ -1,0 +1,76 @@
+/** Add css rules here for your application. */
+/* #content { */
+/*   padding-top: 60px; */
+/* } */
+
+section {
+    padding-top: 60px;
+}
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+.footer {
+margin-top: 45px;
+padding: 35px 0 36px;
+border-top: 1px solid #E5E5E5;
+}
+
+
+/** DragAndDropCellList - begin */
+.pager {
+        border: 1px solid #CCCCCC;
+        height: 400px;
+        text-align: left;
+        width: 200px;
+        margin: 10px;
+}
+
+.gwt-Label{
+margin-left: 10px;
+margin-top: 10px;
+font-size: 14px;
+font-weight: bold;
+}
+
+.pagerWrapper {
+        float:left;
+}
+
+.yellow-border div.pager {
+    border: 1px solid #FFE45C;
+}
+
+.orange-border div.pager {
+        border: 1px solid #F6A828;
+    background-color:#C1DEFD;
+}
+/** DragAndDropCellList - end */

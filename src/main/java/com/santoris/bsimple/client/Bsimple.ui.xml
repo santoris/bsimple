@@ -1,0 +1,49 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+	<ui:style>
+		.important {
+			font-weight: bold;
+		}
+		
+		.social li {
+			display: inline !important;
+		}
+	</ui:style>
+	<g:FlowPanel>
+		<b:ResponsiveNavbar position="TOP" scrollspy="true">
+			<b:Brand href="#">bsimple</b:Brand>
+			<b:NavCollapse>
+				<b:Nav ui:field="nav" />
+			</b:NavCollapse>
+		</b:ResponsiveNavbar>
+
+		<b:FluidContainer ui:field="container">
+			<b:FluidRow>
+				<b:Column size="3">
+<!-- 					<b:Heading size="6">Download from Github</b:Heading> -->
+<!-- 					<b:Paragraph>Download, fork, pull, file issues, and more at the -->
+<!-- 						official -->
+<!-- 						Bootstrap repo on -->
+<!-- 						Github.</b:Paragraph> -->
+<!-- 					<b:Button href="https://github.com/gwtbootstrap/gwt-bootstrap">GWT-Bootstrap -->
+<!-- 						on GitHub »</b:Button> -->
+				</b:Column>
+				<b:Column size="9">
+<!-- 					<b:Heading size="6">Read the docs</b:Heading> -->
+<!-- 					<b:Paragraph>Set up GWT-Bootstrap, get an overview of all the -->
+<!-- 						widgets and -->
+<!-- 						their options.</b:Paragraph> -->
+<!-- 					<b:Button type="PRIMARY" -->
+<!-- 						href="http://gwtbootstrap.github.com/gwt-bootstrap/apidocs/">GWT-Bootstrap Javadoc »</b:Button> -->
+					<g:FlowPanel ui:field="transactionsContainer" />
+				</b:Column>
+			</b:FluidRow>
+
+<!-- 			<g:FlowPanel ui:field="sections" /> -->
+
+<!-- 			<b:Footer> -->
+<!-- 			</b:Footer> -->
+		</b:FluidContainer>
+	</g:FlowPanel>
+</ui:UiBinder>
