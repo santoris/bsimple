@@ -8,7 +8,7 @@
 
 	<welcome-file-list>
 		<!-- <welcome-file>jsp/index.jsp</welcome-file> -->
-		<welcome-file>App.html</welcome-file>
+		<welcome-file>bsimple.html</welcome-file>
 	</welcome-file-list>
 
 	<listener>
@@ -43,6 +43,6 @@
 
 	<servlet-mapping>
 		<servlet-name>dispatcher-gwt</servlet-name>
-		<url-pattern>/App/greet</url-pattern>
+		<url-pattern>/bsimple/greet</url-pattern>
 	</servlet-mapping>
 </web-app>
