@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.santoris.bsimple.client.purse.PursesPanel;
 import com.santoris.bsimple.client.transactions.TransactionsPanel;
 
 public class Bsimple extends Composite implements EntryPoint {
@@ -30,6 +31,9 @@ public class Bsimple extends Composite implements EntryPoint {
 
 	@UiField
 	FlowPanel transactionsContainer;
+	
+	@UiField
+	FlowPanel pursesContainer;
 	
 	private static CopyOfBsimpleUiBinder uiBinder = GWT
 			.create(CopyOfBsimpleUiBinder.class);
@@ -57,7 +61,8 @@ public class Bsimple extends Composite implements EntryPoint {
 //		addSectionToContainer("Pagination", "pagination", new Pagination());
 //		addSectionToContainer("Dropdown", "dropdown", new Dropdown());
 //		addSectionToContainer("Modal", "modal", new Modal());
-		
+
+		pursesContainer.add(new PursesPanel());
 		transactionsContainer.add(new TransactionsPanel());
 
 		RootPanel.get("content").add(this);

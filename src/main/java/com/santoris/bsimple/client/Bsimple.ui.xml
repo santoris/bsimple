@@ -20,27 +20,13 @@
 
 		<b:FluidContainer ui:field="container">
 			<b:FluidRow>
-				<b:Column size="3">
-<!-- 					<b:Heading size="6">Download from Github</b:Heading> -->
-<!-- 					<b:Paragraph>Download, fork, pull, file issues, and more at the -->
-<!-- 						official -->
-<!-- 						Bootstrap repo on -->
-<!-- 						Github.</b:Paragraph> -->
-<!-- 					<b:Button href="https://github.com/gwtbootstrap/gwt-bootstrap">GWT-Bootstrap -->
-<!-- 						on GitHub »</b:Button> -->
-				</b:Column>
 				<b:Column size="9">
-<!-- 					<b:Heading size="6">Read the docs</b:Heading> -->
-<!-- 					<b:Paragraph>Set up GWT-Bootstrap, get an overview of all the -->
-<!-- 						widgets and -->
-<!-- 						their options.</b:Paragraph> -->
-<!-- 					<b:Button type="PRIMARY" -->
-<!-- 						href="http://gwtbootstrap.github.com/gwt-bootstrap/apidocs/">GWT-Bootstrap Javadoc »</b:Button> -->
+					<g:FlowPanel ui:field="pursesContainer" />
+				</b:Column>
+				<b:Column size="3" styleName="pull-right">
 					<g:FlowPanel ui:field="transactionsContainer" />
 				</b:Column>
 			</b:FluidRow>
-
-<!-- 			<g:FlowPanel ui:field="sections" /> -->
 
 <!-- 			<b:Footer> -->
 <!-- 			</b:Footer> -->
