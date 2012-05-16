@@ -232,7 +232,7 @@
 			<groupId>com.googlecode.gwtquery.plugins</groupId>
 			<artifactId>droppable-plugin</artifactId>
 			<version>1.0.7</version>
-			<scope>provided</scope>
+<!-- 			<scope>provided</scope> -->
 		</dependency>
 
 		<dependency>
