@@ -1,4 +1,4 @@
-package com.santoris.bsimple.client.transactions;
+package com.santoris.bsimple.client.purse;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

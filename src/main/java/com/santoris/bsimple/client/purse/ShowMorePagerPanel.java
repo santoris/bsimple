@@ -1,12 +1,18 @@
-package com.santoris.bsimple.client.transactions;
+package com.santoris.bsimple.client.purse;
+
+import static com.google.gwt.query.client.GQuery.$;
 
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.query.client.Function;
 import com.google.gwt.user.cellview.client.AbstractPager;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasRows;
+
 import com.santoris.bsimple.client.ContactDatabase.Category;
 
 /**
@@ -112,7 +118,7 @@ public class ShowMorePagerPanel extends AbstractPager {
     FlowPanel p = new FlowPanel();
     p.add(scrollable);
     p.addStyleName("pagerWrapper");
-    scrollable.addStyleName("transactionPager");
+    scrollable.addStyleName("pursePager");
     initWidget(p);
   }
 }
