@@ -1,4 +1,4 @@
-package com.santoris.bsimple.client.transactions;
+package com.santoris.bsimple.client;
 
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.Random;

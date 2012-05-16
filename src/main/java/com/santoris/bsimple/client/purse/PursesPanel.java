@@ -13,8 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.santoris.bsimple.client.transactions;
+package com.santoris.bsimple.client.purse;
 
+import static com.google.gwt.query.client.GQuery.$;
 import gwtquery.plugins.draggable.client.DraggableOptions;
 import gwtquery.plugins.draggable.client.DraggableOptions.HelperType;
 import gwtquery.plugins.droppable.client.DroppableOptions.AcceptFunction;
@@ -25,14 +26,19 @@ import gwtquery.plugins.droppable.client.gwt.DragAndDropCellList;
 import gwtquery.plugins.droppable.client.gwt.DroppableWidget;
 
 import com.github.gwtbootstrap.client.ui.CodeBlock;
-import com.santoris.bsimple.client.resources.CustomResources;
-import com.santoris.bsimple.client.transactions.ContactCellSample.Images;
 import com.santoris.bsimple.client.ContactDatabase;
+import com.santoris.bsimple.client.resources.CustomResources;
 import com.santoris.bsimple.client.ContactDatabase.Category;
 import com.santoris.bsimple.client.ContactDatabase.ContactInfo;
+import com.santoris.bsimple.client.purse.ContactCellSample.Images;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.query.client.Function;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -40,15 +46,17 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
-public class TransactionsPanel extends Composite {
+public class PursesPanel extends Composite {
 
 	//@UiField
 	//FlowPanel contactFormPanel;
@@ -56,14 +64,14 @@ public class TransactionsPanel extends Composite {
 	@UiField
 	FlowPanel cellPanel;
 	
-	private static TransactionsPanelUiBinder uiBinder = GWT
-			.create(TransactionsPanelUiBinder.class);
+	private static PursesPanelUiBinder uiBinder = GWT
+			.create(PursesPanelUiBinder.class);
 
-	interface TransactionsPanelUiBinder extends
-			UiBinder<Widget, TransactionsPanel> {
+	interface PursesPanelUiBinder extends
+			UiBinder<Widget, PursesPanel> {
 	}
 
-	public TransactionsPanel() {
+	public PursesPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		init();
 	}
@@ -128,29 +136,12 @@ public class TransactionsPanel extends Composite {
 
 		@SuppressWarnings("unchecked")
 		public void onDrop(DropEvent event) {
-			// retrieve the category linked to panel where the draggable was
+			// retrieve the purse linked to panel where the draggable was
 			// dropped.
-			DroppableWidget<ShowMorePagerPanel> droppabelWidget = (DroppableWidget<ShowMorePagerPanel>) event
+			DroppableWidget<Purse> droppabelWidget = (DroppableWidget<Purse>) event
 					.getDroppableWidget();
-			ShowMorePagerPanel dropPanel = droppabelWidget.getOriginalWidget();
-			Category dropCategory = dropPanel.getCategory();
-
-			// retrieve the ContactInfo associated with the draggable element
-			ContactInfo draggedContact = event.getDraggableData();
-			Category oldCategory = draggedContact.getCategory();
-
-			if (oldCategory == dropCategory) {
-				return;
-			}
-
-			// change the category of the contact that was being dragged and
-			// prevent
-			// the data source.
-			draggedContact.setCategory(dropCategory);
-			ContactDatabase.get().moveContact(draggedContact, oldCategory);
-
-			contactForm.setContact(draggedContact);
-
+			Purse purse = droppabelWidget.getOriginalWidget();
+			purse.addAmountAndSetLabel(1.0);
 		}
 
 	}
@@ -168,10 +159,10 @@ public class TransactionsPanel extends Composite {
 		//contactFormPanel.add(contactForm);
 
 		// add the 4 lists for the 4 different categories
-		cellPanel.add(createList(Category.OTHERS));
-		//cellPanel.add(createList(Category.FAMILY));
-		//cellPanel.add(createList(Category.FRIENDS));
-		//cellPanel.add(createList(Category.BUSINESS));
+		//cellPanel.add(createList(Category.OTHERS));
+		cellPanel.add(createList(Category.FAMILY));
+		cellPanel.add(createList(Category.FRIENDS));
+		cellPanel.add(createList(Category.BUSINESS));
 	}
 
 	private DraggableOptions createDraggableOptions() {
@@ -186,6 +177,52 @@ public class TransactionsPanel extends Composite {
 
 	}
 
+	private FlowPanel createPurse() {
+		final FlowPanel purse = new FlowPanel();
+		purse.setStyleName("pursePager");
+
+		final FlowPanel outerPurse = new FlowPanel();
+		outerPurse.setStyleName("outer-pursePager");
+		purse.add(outerPurse);
+		
+		final FlowPanel middlePurse = new FlowPanel();
+		middlePurse.setStyleName("middle-pursePager");
+		purse.add(middlePurse);
+		
+		// text to put here
+		final FlowPanel innerPurse = new FlowPanel();
+		innerPurse.setStyleName("inner-pursePager");
+		purse.add(innerPurse);
+		
+		InlineLabel label = new InlineLabel();
+		label.setText("1");
+		innerPurse.add(label);
+		
+		purse.addDomHandler(new MouseOverHandler() {
+			@Override
+			public void onMouseOver(MouseOverEvent event) {
+				outerPurse.addStyleName("hover");
+				middlePurse.addStyleName("hover");
+			}
+		}, MouseOverEvent.getType());
+		
+		purse.addDomHandler(new MouseOutHandler() {
+			
+			@Override
+			public void onMouseOut(MouseOutEvent event) {
+				outerPurse.removeStyleName("hover");
+				middlePurse.removeStyleName("hover");
+				
+			}
+		}, MouseOutEvent.getType());
+
+		 FlowPanel purseWrapper = new FlowPanel();
+		 purseWrapper.add(purse);
+		 purseWrapper.addStyleName("pagerWrapper");
+	   
+		return purseWrapper;
+	}
+
 	/**
 	 * Code coming from GWT showcase.
 	 * 
@@ -196,7 +233,7 @@ public class TransactionsPanel extends Composite {
 	 * 
 	 * @return
 	 */
-	private DroppableWidget<ShowMorePagerPanel> createList(
+	private DroppableWidget<Purse> createList(
 			final Category category) {
 
 		// Create a ConcactCel
@@ -225,12 +262,17 @@ public class TransactionsPanel extends Composite {
 
 		ContactDatabase.get().addDataDisplay(cellList, category);
 
-		ShowMorePagerPanel pagerPanel = new ShowMorePagerPanel(category);
-		pagerPanel.setDisplay(cellList);
+
+		
+
+		
+		//ShowMorePagerPanel pagerPanel = new ShowMorePagerPanel(category);
+		Purse purse = new Purse();
+		//pagerPanel.setDisplay(cellList);
 
 		// make the pager panel droppable.
-		DroppableWidget<ShowMorePagerPanel> droppabelPanel = new DroppableWidget<ShowMorePagerPanel>(
-				pagerPanel);
+		DroppableWidget<Purse> droppabelPanel = new DroppableWidget<Purse>(
+				purse);
 		// setup the drop operation
 		droppabelPanel.setDroppableHoverClass("orange-border");
 		droppabelPanel.setActiveClass("yellow-border");
@@ -240,11 +282,12 @@ public class TransactionsPanel extends Composite {
 		droppabelPanel.setAccept(new AcceptFunction() {
 
 			public boolean acceptDrop(DragAndDropContext ctx) {
-				// retrieve the dragging ContactInfo
-				ContactInfo draggedContact = ctx.getDraggableData();
-				Category dragCategory = draggedContact.getCategory();
-				// accept only contact coming from an other panel.
-				return dragCategory != category;
+//				// retrieve the dragging ContactInfo
+//				ContactInfo draggedContact = ctx.getDraggableData();
+//				Category dragCategory = draggedContact.getCategory();
+//				// accept only contact coming from an other panel.
+//				return dragCategory != category;
+				return true;
 			}
 
 		});

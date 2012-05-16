@@ -1,4 +1,4 @@
-package com.santoris.bsimple.client.transactions;
+package com.santoris.bsimple.client.purse;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.EntryPoint;
