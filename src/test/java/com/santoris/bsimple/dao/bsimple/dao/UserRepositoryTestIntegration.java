@@ -17,7 +17,6 @@ import com.santoris.bsimple.BaseSpringConfiguration;
 import com.santoris.bsimple.dao.CustomerRepository;
 import com.santoris.bsimple.dao.UserRepository;
 import com.santoris.bsimple.model.Account;
-import com.santoris.bsimple.model.AccountType;
 import com.santoris.bsimple.model.Customer;
 import com.santoris.bsimple.model.IBAN;
 import com.santoris.bsimple.model.User;
@@ -47,7 +46,7 @@ public class UserRepositoryTestIntegration extends BaseSpringConfiguration {
 		account.setBic("AXABFRPPXXX");
 		account.setBankId(20000001500L);
 		account.setLabel("CC");
-		account.setType(AccountType.CHECKING);
+		account.setType("checking");
 		account.setIban(iban);
 		
 		Customer customer = new Customer();
