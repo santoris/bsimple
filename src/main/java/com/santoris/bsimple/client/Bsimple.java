@@ -1,89 +1,163 @@
 package com.santoris.bsimple.client;
 
-import com.github.gwtbootstrap.client.ui.Nav;
-import com.github.gwtbootstrap.client.ui.NavLink;
-import com.github.gwtbootstrap.client.ui.Section;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.base.TextBox;
 import com.github.gwtbootstrap.client.ui.config.Configurator;
-import com.github.gwtbootstrap.client.ui.resources.JavaScriptInjector;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.santoris.bsimple.client.purse.PursesPanel;
-import com.santoris.bsimple.client.transactions.TransactionsPanel;
+import com.santoris.bsimple.client.gwtbootstrap.Form;
+import com.santoris.bsimple.client.gwtbootstrap.Form.SubmitEvent;
+import com.santoris.bsimple.client.gwtbootstrap.Form.SubmitHandler;
+import com.santoris.bsimple.client.service.DashboardService;
+import com.santoris.bsimple.client.service.DashboardServiceAsync;
+import com.santoris.bsimple.client.service.UserService;
+import com.santoris.bsimple.client.service.UserServiceAsync;
+import com.santoris.bsimple.model.Dashboard;
 
 public class Bsimple extends Composite implements EntryPoint {
+
+	private static final String[][] CUSTOMERS = { { "1000000", "Theo" },
+			{ "1000001", "Antonin" }, { "1000002", "Lea" },
+			{ "1500000", "Martin" } };
+
+	private static final Map<String, Integer> CUSTOMER_LIST_BOX_INDEX_BY_BANK_CUSTOMER_ID = new HashMap<String, Integer>();
+
+	@UiField
+	protected FocusWidget connectionButton;
+
+	@UiField
+	protected TextBox loginTextBox;
+
+	@UiField
+	protected ListBox customerListBox;
+
+	private final UserServiceAsync userService = GWT.create(UserService.class);
+
+	private final DashboardServiceAsync dashboardService = GWT.create(DashboardService.class);
+
+	private ClickHandler connectionButtonClickHandler = new ClickHandler() {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			connect();
+		}
+		
+	};
+
+	private KeyUpHandler loginKeyUpHandler = new KeyUpHandler() {
+
+		@Override
+		public void onKeyUp(KeyUpEvent event) {
+			final String login = loginTextBox.getText();
+			if (login.isEmpty()) {
+				connectionButton.setEnabled(false);
+			} else {
+				connectionButton.setEnabled(true);
+				userService.getBankCustomerIdByLogin(login,
+						getBankCustomerIdByLoginCallback);
+			}
+		}
+
+	};
+
+	private AsyncCallback<Long> getBankCustomerIdByLoginCallback = new AsyncCallback<Long>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		}
+
+		@Override
+		public void onSuccess(Long customerId) {
+			if (customerId == null) {
+				customerListBox.setEnabled(true);
+			} else {
+				customerListBox.setEnabled(false);
+				Integer index = CUSTOMER_LIST_BOX_INDEX_BY_BANK_CUSTOMER_ID.get(String.valueOf(customerId));
+				customerListBox.setSelectedIndex(index);
+			}
+		}
+
+	};
+
+	private AsyncCallback<Dashboard> getDashboardCallback = new AsyncCallback<Dashboard>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		}
+
+		@Override
+		public void onSuccess(Dashboard dashboard) {
+			displayDashboard(dashboard);
+		}
+		
+	};
 
 	public void onModuleLoad() {
 	}
 
-//	@UiField
-//	FlowPanel sections;
-	
-	@UiField
-	Nav nav;
+	private static BsimpleUiBinder uiBinder = GWT.create(BsimpleUiBinder.class);
 
-	@UiField
-	FlowPanel transactionsContainer;
-	
-	@UiField
-	FlowPanel pursesContainer;
-	
-	private static CopyOfBsimpleUiBinder uiBinder = GWT
-			.create(CopyOfBsimpleUiBinder.class);
-
-	interface CopyOfBsimpleUiBinder extends UiBinder<Widget, Bsimple> {
+	interface BsimpleUiBinder extends UiBinder<Widget, Bsimple> {
 	}
 
 	public Bsimple() {
-		
+
 		Configurator configurator = GWT.create(Configurator.class);
-		
+
 		GWT.log(String.valueOf(configurator.hasResponsiveDesign()));
-		
+
 		initWidget(uiBinder.createAndBindUi(this));
-//        addSectionToContainer("Get Started", "setup", new Setup());
-//		addSectionToContainer("Get Support", "support", new Support());
-//		addSectionToContainer("Buttons", "buttons", new Buttons());
-//		addSectionToContainer("Grid System", "gridSystem", new GridSystem());
-//		addSectionToContainer("Navigation", "navigation", new Navigation());
-//		addSectionToContainer("Hero Unit", "hero", new HeroUnit());
-//		addSectionToContainer("Forms", "forms", new Forms());
-//		addSectionToContainer("Page Header", "pageheader", new PageHeader());
-//		addSectionToContainer("Progress Bar", "progressbar", new ProgressBar());
-//		addSectionToContainer("Alerts", "alerts", new Alerts());
-//		addSectionToContainer("Pagination", "pagination", new Pagination());
-//		addSectionToContainer("Dropdown", "dropdown", new Dropdown());
-//		addSectionToContainer("Modal", "modal", new Modal());
 
-		pursesContainer.add(new PursesPanel());
-		transactionsContainer.add(new TransactionsPanel());
+		initializeCustomerListBox();
 
+		connectionButton.addClickHandler(connectionButtonClickHandler);
+		
+		loginTextBox.addKeyUpHandler(loginKeyUpHandler);
+		
 		RootPanel.get("content").add(this);
-//		Document doc = Document.get();
-//		ScriptElement script = doc.createScriptElement();
-//		script.setSrc("https://apis.google.com/js/plusone.js");
-//		script.setType("text/javascript");
-//		script.setLang("javascript");
-//		doc.getBody().appendChild(script);
-
-//		JavaScriptInjector
-//				.inject("!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");");
-//		JavaScriptInjector
-//				.inject("(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = \"//connect.facebook.net/en_US/all.js#xfbml=1\";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));");
 	}
 
-//	private void addSectionToContainer(String sectionName, String target,
-//			Widget section) {
-//		nav.add(new NavLink(sectionName, "#" + target));
-//		Section sec = new Section(target);
-//		sec.add(section);
-//		sections.add(sec);
-//	}
+	private void initializeCustomerListBox() {
+		Integer index = 0;
+		for (String[] customer : CUSTOMERS) {
+			String bankCustomerId = customer[0];
+			String customerName = customer[1];
+			customerListBox.addItem(customerName, bankCustomerId);
+			CUSTOMER_LIST_BOX_INDEX_BY_BANK_CUSTOMER_ID.put(bankCustomerId,
+					index);
+			index++;
+		}
+	}
+
+	private void connect() {
+		final String login = loginTextBox.getText();
+
+		final int customerIndex = customerListBox.getSelectedIndex();
+		final String customerId = customerListBox.getValue(customerIndex);
+		
+		dashboardService.getDashboard(login, Long.valueOf(customerId), getDashboardCallback);
+	}
+
+
+	private void displayDashboard(Dashboard dashboard) {
+		DashboardPanel dashBoardPanel = new DashboardPanel(dashboard);
+		RootPanel.get("content").remove(Bsimple.this);
+		RootPanel.get("content").add(dashBoardPanel);
+	}
 }

@@ -43,6 +43,16 @@
 
 	<servlet-mapping>
 		<servlet-name>dispatcher-gwt</servlet-name>
-		<url-pattern>/bsimple/greet</url-pattern>
+		<url-pattern>/bsimple/user</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>dispatcher-gwt</servlet-name>
+		<url-pattern>/bsimple/dashboard</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>dispatcher-gwt</servlet-name>
+		<url-pattern>/bsimple/transaction</url-pattern>
 	</servlet-mapping>
 </web-app>
