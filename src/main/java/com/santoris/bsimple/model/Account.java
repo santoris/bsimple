@@ -13,7 +13,7 @@ public class Account implements Serializable {
 	
 	private Long bankId;
 	
-	private AccountType type;
+	private String type;
 	
 	private String currency;
 	
@@ -31,11 +31,11 @@ public class Account implements Serializable {
 		this.bankId = bankId;
 	}
 
-	public AccountType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(AccountType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

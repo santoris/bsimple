@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+	xmlns:gwtbootstrap="urn:import:com.santoris.bsimple.client.gwtbootstrap">
 	<ui:style>
 		.important {
 			font-weight: bold;
@@ -9,27 +10,77 @@
 		.social li {
 			display: inline !important;
 		}
+		
+		.video {
+			border-top: none;
+			border-left: none;
+			border-right: none;
+			border-bottom: none;
+		}
+		
+		.videoPanel {
+			margin-top: 50px;
+			text-align: center;
+		}
+		
+		.loginOuter {
+			position: fixed;
+			left: 50%;
+			width: 300px;
+			margin-left: -150px;
+			margin-top: 50px;
+			text-align: center;
+		}
+		
+		.loginInside {
+			text-align: left;
+		}
+		
+		.loginLogin {
+			width: 95%;
+		}
+		
+		.loginCustomerSelect {
+			margin-top: 10px;
+		}
+		
+		.loginSubmitButton {
+			margin-top: 10px;
+		}
+		
+		.loginActions {
+			padding: 18px 0px 0px;
+			margin-bottom: 0px;
+			text-align: right;
+		}
 	</ui:style>
 	<g:FlowPanel>
-		<b:ResponsiveNavbar position="TOP" scrollspy="true">
-			<b:Brand href="#">bsimple</b:Brand>
-			<b:NavCollapse>
-				<b:Nav ui:field="nav" />
-			</b:NavCollapse>
-		</b:ResponsiveNavbar>
-
 		<b:FluidContainer ui:field="container">
-			<b:FluidRow>
-				<b:Column size="9">
-					<g:FlowPanel ui:field="pursesContainer" />
-				</b:Column>
-				<b:Column size="3" styleName="pull-right">
-					<g:FlowPanel ui:field="transactionsContainer" />
-				</b:Column>
+			<g:FlowPanel styleName="{style.videoPanel}">
+				<g:Frame width="560px" height="315px" styleName="{style.video}"
+					url="http://www.youtube.com/embed/OFb0NaeRmdg"></g:Frame>
+			</g:FlowPanel>
+			<b:FluidRow styleName="{style.loginOuter}">
+				<g:FlowPanel styleName="{style.loginInside}">
+					<g:FlowPanel styleName="well">
+						<b:ControlGroup>
+							<b:HelpBlock>Enter un nouveau nom d'utilisateur pour partir de
+								zéro ou un nom précédemment saisi pour retrouver vos données:</b:HelpBlock>
+							<b:TextBox placeholder="Nom d'utilisateur" ui:field="loginTextBox" />
+						</b:ControlGroup>
+						<b:ControlGroup>
+							<b:HelpBlock>Sélectionner un client de test:</b:HelpBlock>
+							<g:ListBox enabled="false" ui:field="customerListBox" />
+						</b:ControlGroup>
+						<g:FlowPanel styleName="form-actions {style.loginActions}">
+							<b:SubmitButton enabled="false" addStyleNames="btn"
+								type="PRIMARY" ui:field="connectionButton">Connection</b:SubmitButton>
+						</g:FlowPanel>
+					</g:FlowPanel>
+				</g:FlowPanel>
 			</b:FluidRow>
-
-<!-- 			<b:Footer> -->
-<!-- 			</b:Footer> -->
+			<g:HTMLPanel>​
+			</g:HTMLPanel>
 		</b:FluidContainer>
 	</g:FlowPanel>
 </ui:UiBinder>
