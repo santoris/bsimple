@@ -45,9 +45,7 @@
 		<spring.version>3.1.1.RELEASE</spring.version>
 
 		<finalName.versionLabel>${project.version}-${buildNumber}</finalName.versionLabel>
-		<finalName>
-			${project.artifactId}-${finalName.versionLabel}
-		</finalName>
+		<finalName>${project.artifactId}-${finalName.versionLabel}</finalName>
 		<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
 		<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
 
@@ -232,7 +230,7 @@
 			<groupId>com.googlecode.gwtquery.plugins</groupId>
 			<artifactId>droppable-plugin</artifactId>
 			<version>1.0.7</version>
-<!-- 			<scope>provided</scope> -->
+			<!-- <scope>provided</scope> -->
 		</dependency>
 
 		<dependency>
@@ -242,12 +240,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.googlecode.gwtquery.bundles</groupId> -->
-<!-- 			<artifactId>gquery-dnd-bundle</artifactId> -->
-<!-- 			<version>1.0.5</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.googlecode.gwtquery.bundles</groupId> -->
+		<!-- <artifactId>gquery-dnd-bundle</artifactId> -->
+		<!-- <version>1.0.5</version> -->
+		<!-- <scope>provided</scope> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -363,10 +361,10 @@
 				<artifactId>beanstalk-maven-plugin</artifactId>
 				<configuration>
 					<artifactFile>${project.build.directory}/${finalName}.${project.packaging}</artifactFile>
-					<applicationName>My First Elastic Beanstalk Application</applicationName>
-					<cnamePrefix>Default-Environment-aws2wv7bpp</cnamePrefix><!-- cnamePrefix.elasticbeanstalk.com -->
-					<environmentName>Default-Environment</environmentName>
-					<s3Bucket>elasticbeanstalk-us-east-1-530005104459</s3Bucket>
+					<applicationName>bsimple</applicationName>
+					<cnamePrefix>bsimple</cnamePrefix><!-- cnamePrefix.elasticbeanstalk.com -->
+					<environmentName>bsimple</environmentName>
+					<s3Bucket>elasticbeanstalk-eu-west-1-530005104459</s3Bucket>
 					<s3Key>${finalName}.${project.packaging}</s3Key>
 				</configuration>
 			</plugin>
