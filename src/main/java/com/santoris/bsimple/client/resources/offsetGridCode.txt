@@ -1,4 +1,0 @@
-<b:Row>
-  <b:Column size="4">...</b:Column>
-  <b:Column size="4" offset="4">...</b:Column>
-</b:Row>
