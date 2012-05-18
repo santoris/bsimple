@@ -361,11 +361,13 @@
 				<artifactId>beanstalk-maven-plugin</artifactId>
 				<configuration>
 					<artifactFile>${project.build.directory}/${finalName}.${project.packaging}</artifactFile>
+					<region>eu-west-1</region>
 					<applicationName>bsimple</applicationName>
 					<cnamePrefix>bsimple</cnamePrefix><!-- cnamePrefix.elasticbeanstalk.com -->
 					<environmentName>bsimple</environmentName>
 					<s3Bucket>elasticbeanstalk-eu-west-1-530005104459</s3Bucket>
 					<s3Key>${finalName}.${project.packaging}</s3Key>
+					<
 				</configuration>
 			</plugin>
 			<!-- GWT Maven Plugin -->
