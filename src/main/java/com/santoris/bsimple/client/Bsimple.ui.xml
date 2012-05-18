@@ -1,7 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
-	xmlns:gwtbootstrap="urn:import:com.santoris.bsimple.client.gwtbootstrap">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
 	<ui:style>
 		.important {
 			font-weight: bold;
@@ -26,8 +25,8 @@
 		.loginOuter {
 			position: fixed;
 			left: 50%;
-			width: 300px;
-			margin-left: -150px;
+			width: 560px;
+			margin-left: -280px;
 			margin-top: 50px;
 			text-align: center;
 		}

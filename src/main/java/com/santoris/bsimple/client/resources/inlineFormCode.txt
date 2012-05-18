@@ -1,6 +1,0 @@
-<b:WellForm type="INLINE">
-	<b:TextBox alternateSize="SMALL" placeholder="Email"/>
-	<b:PasswordTextBox alternateSize="SMALL" placeholder="Passowrd"/>
-	<b:CheckBox> Remember me</b:CheckBox>
-	<b:SubmitButton addStyleNames="btn">Sign in</b:SubmitButton>
-</b:WellForm>

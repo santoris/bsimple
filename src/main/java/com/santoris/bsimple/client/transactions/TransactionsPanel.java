@@ -24,15 +24,8 @@ import gwtquery.plugins.droppable.client.events.DropEvent.DropEventHandler;
 import gwtquery.plugins.droppable.client.gwt.DragAndDropCellList;
 import gwtquery.plugins.droppable.client.gwt.DroppableWidget;
 
-import com.github.gwtbootstrap.client.ui.CodeBlock;
-import com.santoris.bsimple.client.resources.CustomResources;
-import com.santoris.bsimple.client.transactions.ContactCellSample.Images;
-import com.santoris.bsimple.client.ContactDatabase;
-import com.santoris.bsimple.client.ContactDatabase.Category;
-import com.santoris.bsimple.client.ContactDatabase.ContactInfo;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -43,10 +36,12 @@ import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagin
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.santoris.bsimple.client.ContactDatabase;
+import com.santoris.bsimple.client.ContactDatabase.Category;
+import com.santoris.bsimple.client.ContactDatabase.ContactInfo;
 
 public class TransactionsPanel extends Composite {
 
