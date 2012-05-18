@@ -39,6 +39,20 @@
 			<url>http://gwtquery-plugins.googlecode.com/svn/mavenrepo</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>Sonatype snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<!-- The releases element here is due to an issue in Maven 2.0 that will 
+				be fixed in future releases. This should be able to be disabled altogether. -->
+			<releases>
+				<updatePolicy>daily</updatePolicy>
+			</releases>
+			<snapshots>
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jackson.version>1.8.6</jackson.version>
@@ -48,6 +62,7 @@
 		<finalName>${project.artifactId}-${finalName.versionLabel}</finalName>
 		<!-- to deploy on Amazon Elastic Beanstalk with beanstalk-maven-plugin -->
 		<beanstalk.versionLabel>${finalName.versionLabel}</beanstalk.versionLabel>
+		<beanstalk.region>eu-west-1</beanstalk.region>
 
 		<!-- Gwt conf -->
 		<gwtVersion>2.4.0</gwtVersion>
@@ -359,9 +374,9 @@
 			<plugin>
 				<groupId>br.com.ingenieux</groupId>
 				<artifactId>beanstalk-maven-plugin</artifactId>
+				<version>0.2.7-SNAPSHOT</version>
 				<configuration>
 					<artifactFile>${project.build.directory}/${finalName}.${project.packaging}</artifactFile>
-					<region>eu-west-1</region>
 					<applicationName>bsimple</applicationName>
 					<cnamePrefix>bsimple</cnamePrefix><!-- cnamePrefix.elasticbeanstalk.com -->
 					<environmentName>bsimple</environmentName>
