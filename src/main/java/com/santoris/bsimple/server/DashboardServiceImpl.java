@@ -21,10 +21,15 @@ public class DashboardServiceImpl implements DashboardService {
 	@Override
 	public Dashboard getDashboard(String login, Long bankCustomerId) {
 		User user = userRepository.findByLogin(login);
+;
 		if (user == null && bankCustomerId != null) {
-			axaDataToBsimpleModelImporter.importDataForAUser(login, bankCustomerId);
+			user = axaDataToBsimpleModelImporter.importDataForAUser(login, bankCustomerId);
 		}
-		return new Dashboard();
+		
+		Dashboard dashboard = new Dashboard();
+		dashboard.setUser(user);
+		
+		return dashboard;
 	}
 
 }

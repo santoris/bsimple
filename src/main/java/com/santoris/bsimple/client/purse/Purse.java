@@ -60,7 +60,7 @@ public class Purse extends Composite {
 
 		FlowPanel purseWrapper = new FlowPanel();
 		purseWrapper.add(purse);
-		purseWrapper.addStyleName("pagerWrapper");
+		purseWrapper.addStyleName("pursePagerWrapper");
 
 		return purseWrapper;
 	}

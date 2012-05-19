@@ -1,16 +1,16 @@
 package com.santoris.bsimple.client;
 
-import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.Random;
-import com.google.gwt.view.client.HasData;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.ProvidesKey;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.user.client.Random;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.ProvidesKey;
 
 /**
  * The data source for contact information used in the sample. This majority of

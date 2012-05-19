@@ -1,20 +1,6 @@
-/*
- *  Copyright 2012 GWT-Bootstrap
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package com.santoris.bsimple.client.transactions;
 
+import static com.google.common.collect.Lists.newArrayList;
 import gwtquery.plugins.draggable.client.DraggableOptions;
 import gwtquery.plugins.draggable.client.DraggableOptions.HelperType;
 import gwtquery.plugins.droppable.client.DroppableOptions.AcceptFunction;
@@ -24,10 +10,23 @@ import gwtquery.plugins.droppable.client.events.DropEvent.DropEventHandler;
 import gwtquery.plugins.droppable.client.gwt.DragAndDropCellList;
 import gwtquery.plugins.droppable.client.gwt.DroppableWidget;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.Legend;
+import com.github.gwtbootstrap.client.ui.base.TextBox;
+import com.github.gwtbootstrap.client.ui.base.UnorderedList;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,21 +35,40 @@ import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagin
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.santoris.bsimple.client.ContactDatabase;
 import com.santoris.bsimple.client.ContactDatabase.Category;
 import com.santoris.bsimple.client.ContactDatabase.ContactInfo;
+import com.santoris.bsimple.client.widget.DropdownHTMLEntry;
+import com.santoris.bsimple.model.Account;
+import com.santoris.bsimple.model.Dashboard;
+import com.santoris.bsimple.model.IBAN;
 
 public class TransactionsPanel extends Composite {
 
-	//@UiField
-	//FlowPanel contactFormPanel;
+	private static final String ALL_ACCOUNTS_LABEL = "Tous mes comptes";
 
 	@UiField
-	FlowPanel cellPanel;
+	protected Legend transactionListsDescription;
 	
+	@UiField
+	protected HasText accountButtonLabel;
+	
+	@UiField
+	protected UnorderedList accountsList;
+	
+	@UiField
+	protected TextBox searchTextBox;
+	
+	@UiField
+	protected Button searchButton;
+
+	@UiField
+	protected FlowPanel cellPanel;
+
 	private static TransactionsPanelUiBinder uiBinder = GWT
 			.create(TransactionsPanelUiBinder.class);
 
@@ -58,9 +76,9 @@ public class TransactionsPanel extends Composite {
 			UiBinder<Widget, TransactionsPanel> {
 	}
 
-	public TransactionsPanel() {
+	public TransactionsPanel(Dashboard dashboard) {
 		initWidget(uiBinder.createAndBindUi(this));
-		init();
+		init(dashboard);
 	}
 
 	/**
@@ -71,6 +89,20 @@ public class TransactionsPanel extends Composite {
 
 		ImageResource contact();
 	}
+
+	protected interface AccountListEntryTemplates extends SafeHtmlTemplates {
+		@Template("<a href=\"javascript:;\" style=\"width: 350px; float: left; padding: 0px 0px;\"><label style=\"float: left; width: 100%;\"><span style=\"margin-right:10px; float:left; padding-left:15px;\"><b>"
+				+ "{0}</b></span><span style=\"float:right; padding: 0 15px\">"
+				+ "{1}</span></label></a>")
+		SafeHtml entry(String accountLabel, String accountIBAN);
+	}
+
+	private static final AccountListEntryTemplates ACCOUNT_LIST_ENTRY_TEMPLATES = GWT
+			.create(AccountListEntryTemplates.class);
+
+	private final Map<Element, Account> accountByNavLinkElement = new HashMap<Element, Account>();
+
+	private Account selectedAccount;
 
 	/**
 	 * The Cell used to render a {@link ContactInfo}. Code coming from the GWT
@@ -143,30 +175,75 @@ public class TransactionsPanel extends Composite {
 			// the data source.
 			draggedContact.setCategory(dropCategory);
 			ContactDatabase.get().moveContact(draggedContact, oldCategory);
-
-			contactForm.setContact(draggedContact);
-
 		}
 
 	}
 
-	/*
-	 * Form displaying info of the selected contact
-	 */
-	private ContactInfoForm contactForm;
-
-	public void init() {
-
-		// add the contact form
-		contactForm = new ContactInfoForm();
-		//RootPanel.get("contactForm").add(contactForm);
-		//contactFormPanel.add(contactForm);
-
-		// add the 4 lists for the 4 different categories
+	public void init(Dashboard dashboard) {
+		initializeAccountsListBox(dashboard.getUser().getCustomer()
+				.getAccounts());
+		
+		searchButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				System.out.println("Account: " + selectedAccount);
+				System.out.println("Search text: " + searchTextBox.getText());
+				updateHeading();
+			}
+		});
+		
 		cellPanel.add(createList(Category.OTHERS));
-		//cellPanel.add(createList(Category.FAMILY));
-		//cellPanel.add(createList(Category.FRIENDS));
-		//cellPanel.add(createList(Category.BUSINESS));
+	}
+	
+	private void updateHeading() {
+		final StringBuilder html = new StringBuilder();
+		html.append("transactions appartenant à <b>");
+		html.append(selectedAccount.getLabel().toLowerCase());
+		html.append("</b>");
+		if (!searchTextBox.getText().isEmpty()) {
+			html.append(" contenant <b>");
+			html.append(searchTextBox.getText());
+		}
+		html.append("</b>");
+		html.append(" au cours du mois de <b>mai</b>:");
+
+		this.transactionListsDescription.getElement().setInnerHTML(html.toString());
+	}
+	
+	private void selectAccount(final Account account) {
+		selectedAccount = account;
+		accountButtonLabel.setText(selectedAccount.getLabel().toLowerCase());
+		updateHeading();
+	}
+
+	private void initializeAccountsListBox(List<Account> accounts) {
+		Account fakeAllAccount = new Account();
+		fakeAllAccount.setLabel(ALL_ACCOUNTS_LABEL);
+		IBAN iban = new IBAN();
+		iban.setCountryCode("");
+		iban.setCheckDigits("");
+		iban.setBban("");
+		fakeAllAccount.setIban(iban);
+		
+		selectAccount(fakeAllAccount);
+
+		List<Account> displayedAccounts = newArrayList();
+		displayedAccounts.add(fakeAllAccount);
+		displayedAccounts.addAll(accounts);
+		for (Account account : displayedAccounts) {
+			SafeHtml html = ACCOUNT_LIST_ENTRY_TEMPLATES.entry(account.getLabel().toLowerCase(), account.getIban().getLabel());
+			DropdownHTMLEntry entry = new DropdownHTMLEntry(html.asString());
+			accountByNavLinkElement.put(entry.getElement(), account);
+			accountsList.add(entry);
+			entry.addDomHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Account account = accountByNavLinkElement.get(event
+							.getRelativeElement());
+					selectAccount(account);
+				}
+			}, ClickEvent.getType());
+		}
 	}
 
 	private DraggableOptions createDraggableOptions() {
@@ -175,6 +252,7 @@ public class TransactionsPanel extends Composite {
 		options.setHelper(HelperType.CLONE);
 		// set the opacity of the drag helper
 		options.setOpacity((float) 0.9);
+		options.setZIndex(1000);
 		// append the drag helper to the body element
 		options.setAppendTo("body");
 		return options;
@@ -213,8 +291,7 @@ public class TransactionsPanel extends Composite {
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					public void onSelectionChange(SelectionChangeEvent event) {
-						contactForm.setContact(selectionModel
-								.getSelectedObject());
+						// contactForm.setContact(selectionModel.getSelectedObject());
 					}
 				});
 
@@ -227,8 +304,8 @@ public class TransactionsPanel extends Composite {
 		DroppableWidget<ShowMorePagerPanel> droppabelPanel = new DroppableWidget<ShowMorePagerPanel>(
 				pagerPanel);
 		// setup the drop operation
-		droppabelPanel.setDroppableHoverClass("orange-border");
-		droppabelPanel.setActiveClass("yellow-border");
+		// droppabelPanel.setDroppableHoverClass("orange-border");
+		// droppabelPanel.setActiveClass("yellow-border");
 		droppabelPanel.addDropHandler(new DropHandler());
 		// use an AcceptFunction to accept only draggable coming from an other
 		// panel

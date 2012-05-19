@@ -116,7 +116,12 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>11.0.2</version>
+			<version>12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava-gwt</artifactId>
+			<version>12.0</version>
 		</dependency>
 
 		<!-- Run -->
@@ -304,13 +309,13 @@
 						</manifestEntries>
 					</archive>
 					<webResources>
-						<webResource>
-							<!-- Adds ${buildNumber} to header.jsp (i.e. 1st line of the head 
-								of index.html) -->
-							<directory>${basedir}/src/main/webapp/jsp</directory>
-							<targetPath>jsp</targetPath>
+						<resource>
+							<directory>${basedir}/src/main/webapp</directory>
 							<filtering>true</filtering>
-						</webResource>
+							<includes>
+								<include>bsimple.html</include>
+							</includes>
+						</resource>
 					</webResources>
 				</configuration>
 			</plugin>

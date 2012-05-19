@@ -20,11 +20,12 @@
 
 		<b:FluidContainer ui:field="container">
 			<b:FluidRow>
+				<b:Column size="3">
+					<g:FlowPanel ui:field="transactionsContainer" />
+				</b:Column>
+<!-- 				<b:Column size="9"  styleName="pull-right"> -->
 				<b:Column size="9">
 					<g:FlowPanel ui:field="pursesContainer" />
-				</b:Column>
-				<b:Column size="3" styleName="pull-right">
-					<g:FlowPanel ui:field="transactionsContainer" />
 				</b:Column>
 			</b:FluidRow>
 
