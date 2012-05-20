@@ -3,6 +3,7 @@ package com.santoris.bsimple.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -33,6 +34,16 @@ public class Transaction implements Serializable {
 
 	private boolean oustanding;
 	
+	private List<Long> accounts;
+	
+	public List<Long> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Long> accounts) {
+		this.accounts = accounts;
+	}
+
 	public String getId() {
 		return id;
 	}

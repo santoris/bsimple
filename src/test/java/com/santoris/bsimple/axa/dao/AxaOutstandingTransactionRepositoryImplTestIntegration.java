@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.santoris.bsimple.BaseSpringConfiguration;
 import com.santoris.bsimple.axa.model.AxaOutstandingTransaction;
 
-public class AxaOutstandingTransactionRepositoryImplTest extends BaseSpringConfiguration {
+public class AxaOutstandingTransactionRepositoryImplTestIntegration extends BaseSpringConfiguration {
 
 	@Autowired
 	AxaOutstandingTransactionRepository repository;

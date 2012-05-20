@@ -14,7 +14,6 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.santoris.bsimple.client.ContactDatabase.Category;
 
 public class PursesPanel extends Composite {
 
@@ -51,9 +50,9 @@ public class PursesPanel extends Composite {
 	}
 
 	public void init() {
-		cellPanel.add(createList(Category.FAMILY));
-		cellPanel.add(createList(Category.FRIENDS));
-		cellPanel.add(createList(Category.BUSINESS));
+		cellPanel.add(createPurse());
+		cellPanel.add(createPurse());
+		cellPanel.add(createPurse());
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class PursesPanel extends Composite {
 	 * 
 	 * @return
 	 */
-	private DroppableWidget<Purse> createList(final Category category) {
+	private DroppableWidget<Purse> createPurse() {
 		Purse purse = new Purse();
 
 		// make the pager panel droppable.

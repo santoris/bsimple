@@ -29,5 +29,6 @@
 	<source path='client' />
 	<source path='shared' />
 	<source path='model' />
+	<source path='page' />
 
 </module>

@@ -3,13 +3,10 @@ package com.santoris.bsimple.client.transactions;
 import static com.google.common.collect.Lists.newArrayList;
 import gwtquery.plugins.draggable.client.DraggableOptions;
 import gwtquery.plugins.draggable.client.DraggableOptions.HelperType;
-import gwtquery.plugins.droppable.client.DroppableOptions.AcceptFunction;
-import gwtquery.plugins.droppable.client.events.DragAndDropContext;
-import gwtquery.plugins.droppable.client.events.DropEvent;
-import gwtquery.plugins.droppable.client.events.DropEvent.DropEventHandler;
 import gwtquery.plugins.droppable.client.gwt.DragAndDropCellList;
-import gwtquery.plugins.droppable.client.gwt.DroppableWidget;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,29 +20,33 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.santoris.bsimple.client.ContactDatabase;
-import com.santoris.bsimple.client.ContactDatabase.Category;
-import com.santoris.bsimple.client.ContactDatabase.ContactInfo;
+import com.santoris.bsimple.client.service.TransactionService;
+import com.santoris.bsimple.client.service.TransactionServiceAsync;
 import com.santoris.bsimple.client.widget.DropdownHTMLEntry;
 import com.santoris.bsimple.model.Account;
 import com.santoris.bsimple.model.Dashboard;
 import com.santoris.bsimple.model.IBAN;
+import com.santoris.bsimple.model.Period;
+import com.santoris.bsimple.model.Transaction;
+import com.santoris.bsimple.page.Page;
+import com.santoris.bsimple.page.PageRequest;
 
 public class TransactionsPanel extends Composite {
 
@@ -53,16 +54,16 @@ public class TransactionsPanel extends Composite {
 
 	@UiField
 	protected Legend transactionListsDescription;
-	
+
 	@UiField
 	protected HasText accountButtonLabel;
-	
+
 	@UiField
 	protected UnorderedList accountsList;
-	
+
 	@UiField
 	protected TextBox searchTextBox;
-	
+
 	@UiField
 	protected Button searchButton;
 
@@ -81,15 +82,6 @@ public class TransactionsPanel extends Composite {
 		init(dashboard);
 	}
 
-	/**
-	 * The images used for this example.
-	 */
-	static interface Images extends ClientBundle {
-		public Images INSTANCE = GWT.create(Images.class);
-
-		ImageResource contact();
-	}
-
 	protected interface AccountListEntryTemplates extends SafeHtmlTemplates {
 		@Template("<a href=\"javascript:;\" style=\"width: 350px; float: left; padding: 0px 0px;\"><label style=\"float: left; width: 100%;\"><span style=\"margin-right:10px; float:left; padding-left:15px;\"><b>"
 				+ "{0}</b></span><span style=\"float:right; padding: 0 15px\">"
@@ -100,89 +92,97 @@ public class TransactionsPanel extends Composite {
 	private static final AccountListEntryTemplates ACCOUNT_LIST_ENTRY_TEMPLATES = GWT
 			.create(AccountListEntryTemplates.class);
 
+	/**
+	 * The key provider that provides the unique ID of a transaction.
+	 */
+	public static final ProvidesKey<Transaction> TRANSACTION_KEY_PROVIDER = new ProvidesKey<Transaction>() {
+		public Object getKey(Transaction item) {
+			return item == null ? null : item.getId();
+		}
+	};
+
+	private final TransactionServiceAsync transactionService = GWT
+			.create(TransactionService.class);
+
+	private AsyncCallback<Page<Transaction>> getTransactionsCallback = new AsyncCallback<Page<Transaction>>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+		}
+
+		@Override
+		public void onSuccess(Page<Transaction> page) {
+			final int start = page.getPageRequest().getPageNumber()
+					* page.getPageRequest().getPageSize();
+			transactionListPanel.setTotalRowCount(page.getTotal());
+			transactionAsyncDataProvider
+					.updateRowData(start, page.getContent());
+		}
+
+	};
+
+	private class TransactionAsyncDataProvider extends
+			AsyncDataProvider<Transaction> {
+
+		@Override
+		protected void onRangeChanged(HasData<Transaction> display) {
+			final Range range = display.getVisibleRange();
+			System.out.println("*** range " + range + " " + new Date());
+			int start = range.getStart();
+			int length = range.getLength();
+			List<Transaction> newData = new ArrayList<Transaction>();
+
+			PageRequest pageRequest = new PageRequest(0, length);
+			final String userId = TransactionsPanel.this.dashboard.getUser()
+					.getId();
+			final List<Long> accountIds = newArrayList(TransactionsPanel.this.selectedAccount
+					.getBankId());
+			TransactionsPanel.this.transactionService
+					.findTransactionsByAccountIdsByPeriod(pageRequest, userId,
+							accountIds, getPeriod(), getTransactionsCallback);
+
+			this.updateRowData(start, newData);
+		}
+	}
+
+	private AsyncDataProvider<Transaction> transactionAsyncDataProvider = new TransactionAsyncDataProvider();
+
 	private final Map<Element, Account> accountByNavLinkElement = new HashMap<Element, Account>();
 
 	private Account selectedAccount;
 
+	private Dashboard dashboard;
+
+	private ShowMorePagerPanel transactionListPanel;
+
 	/**
-	 * The Cell used to render a {@link ContactInfo}. Code coming from the GWT
-	 * showcase
-	 * 
+	 * The Cell used to render a {@link Transaction}.
 	 */
-	private static class ContactCell extends AbstractCell<ContactInfo> {
-
-		/**
-		 * The html of the image used for contacts.
-		 * 
-		 */
-		private final String imageHtml;
-
-		public ContactCell(ImageResource image) {
-			this.imageHtml = AbstractImagePrototype.create(image).getHTML();
-		}
+	private static class TransactionCell extends AbstractCell<Transaction> {
 
 		@Override
-		public void render(com.google.gwt.cell.client.Cell.Context context,
-				ContactInfo value, SafeHtmlBuilder sb) {
+		public void render(Context context, Transaction value,
+				SafeHtmlBuilder sb) {
 			// Value can be null, so do a null check..
 			if (value == null) {
 				return;
 			}
 
 			sb.appendHtmlConstant("<table>");
-
-			// Add the contact image.
-			sb.appendHtmlConstant("<tr><td rowspan='3'><div>");
-			sb.appendHtmlConstant(imageHtml);
-			sb.appendHtmlConstant("</div></td>");
-
-			// Add the name and address.
-			sb.appendHtmlConstant("<td style='font-size:95%;'>");
-			sb.appendEscaped(value.getFullName());
+			sb.appendHtmlConstant("<tr><td style='font-size:95%;'>");
+			sb.appendEscaped(value.getLabel());
 			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(value.getAddress());
+			sb.appendEscaped(value.getAmount().toString());
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
 	}
 
-	/**
-	 * Object handling the drop event.
-	 * 
-	 * @author Julien Dramaix (julien.dramaix@gmail.com)
-	 * 
-	 */
-	private class DropHandler implements DropEventHandler {
-
-		@SuppressWarnings("unchecked")
-		public void onDrop(DropEvent event) {
-			// retrieve the category linked to panel where the draggable was
-			// dropped.
-			DroppableWidget<ShowMorePagerPanel> droppabelWidget = (DroppableWidget<ShowMorePagerPanel>) event
-					.getDroppableWidget();
-			ShowMorePagerPanel dropPanel = droppabelWidget.getOriginalWidget();
-			Category dropCategory = dropPanel.getCategory();
-
-			// retrieve the ContactInfo associated with the draggable element
-			ContactInfo draggedContact = event.getDraggableData();
-			Category oldCategory = draggedContact.getCategory();
-
-			if (oldCategory == dropCategory) {
-				return;
-			}
-
-			// change the category of the contact that was being dragged and
-			// prevent
-			// the data source.
-			draggedContact.setCategory(dropCategory);
-			ContactDatabase.get().moveContact(draggedContact, oldCategory);
-		}
-
-	}
-
 	public void init(Dashboard dashboard) {
+		this.dashboard = dashboard;
+
 		initializeAccountsListBox(dashboard.getUser().getCustomer()
 				.getAccounts());
-		
+
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -191,10 +191,17 @@ public class TransactionsPanel extends Composite {
 				updateHeading();
 			}
 		});
-		
-		cellPanel.add(createList(Category.OTHERS));
+
+		 transactionListPanel = createList();
+		cellPanel.add(transactionListPanel);
 	}
 	
+	private Period getPeriod() {
+		Date startDate = new Date(2012 - 1900, 1 - 1, 1);
+		Date endDate = new Date(2012 - 1900, 1 - 1, 31);
+		return new Period(startDate, endDate);
+	}
+
 	private void updateHeading() {
 		final StringBuilder html = new StringBuilder();
 		html.append("transactions appartenant à <b>");
@@ -207,9 +214,10 @@ public class TransactionsPanel extends Composite {
 		html.append("</b>");
 		html.append(" au cours du mois de <b>mai</b>:");
 
-		this.transactionListsDescription.getElement().setInnerHTML(html.toString());
+		this.transactionListsDescription.getElement().setInnerHTML(
+				html.toString());
 	}
-	
+
 	private void selectAccount(final Account account) {
 		selectedAccount = account;
 		accountButtonLabel.setText(selectedAccount.getLabel().toLowerCase());
@@ -224,14 +232,15 @@ public class TransactionsPanel extends Composite {
 		iban.setCheckDigits("");
 		iban.setBban("");
 		fakeAllAccount.setIban(iban);
-		
+
 		selectAccount(fakeAllAccount);
 
 		List<Account> displayedAccounts = newArrayList();
 		displayedAccounts.add(fakeAllAccount);
 		displayedAccounts.addAll(accounts);
 		for (Account account : displayedAccounts) {
-			SafeHtml html = ACCOUNT_LIST_ENTRY_TEMPLATES.entry(account.getLabel().toLowerCase(), account.getIban().getLabel());
+			SafeHtml html = ACCOUNT_LIST_ENTRY_TEMPLATES.entry(account
+					.getLabel().toLowerCase(), account.getIban().getLabel());
 			DropdownHTMLEntry entry = new DropdownHTMLEntry(html.asString());
 			accountByNavLinkElement.put(entry.getElement(), account);
 			accountsList.add(entry);
@@ -259,25 +268,14 @@ public class TransactionsPanel extends Composite {
 
 	}
 
-	/**
-	 * Code coming from GWT showcase.
-	 * 
-	 * We just use a {@link DragAndDropCellList} instead of a {@link CellList}
-	 * and make the pager panel droppable.
-	 * 
-	 * @param contactForm
-	 * 
-	 * @return
-	 */
-	private DroppableWidget<ShowMorePagerPanel> createList(
-			final Category category) {
+	private ShowMorePagerPanel createList() {
 
 		// Create a ConcactCel
-		ContactCell contactCell = new ContactCell(Images.INSTANCE.contact());
+		TransactionCell transactionCell = new TransactionCell();
 
 		// Create a drag and drop cell list
-		DragAndDropCellList<ContactInfo> cellList = new DragAndDropCellList<ContactInfo>(
-				contactCell, ContactDatabase.ContactInfo.KEY_PROVIDER);
+		DragAndDropCellList<Transaction> cellList = new DragAndDropCellList<Transaction>(
+				transactionCell, TRANSACTION_KEY_PROVIDER);
 		// The cell of this cell list are only draggable
 		cellList.setCellDraggableOnly();
 		// setup the drag operation
@@ -285,8 +283,8 @@ public class TransactionsPanel extends Composite {
 
 		cellList.setPageSize(30);
 		cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
-		final SingleSelectionModel<ContactInfo> selectionModel = new SingleSelectionModel<ContactInfo>(
-				ContactDatabase.ContactInfo.KEY_PROVIDER);
+		final SingleSelectionModel<Transaction> selectionModel = new SingleSelectionModel<Transaction>(
+				TRANSACTION_KEY_PROVIDER);
 		cellList.setSelectionModel(selectionModel);
 		selectionModel
 				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -295,32 +293,11 @@ public class TransactionsPanel extends Composite {
 					}
 				});
 
-		ContactDatabase.get().addDataDisplay(cellList, category);
+		this.transactionAsyncDataProvider.addDataDisplay(cellList);
 
-		ShowMorePagerPanel pagerPanel = new ShowMorePagerPanel(category);
+		ShowMorePagerPanel pagerPanel = new ShowMorePagerPanel();
 		pagerPanel.setDisplay(cellList);
 
-		// make the pager panel droppable.
-		DroppableWidget<ShowMorePagerPanel> droppabelPanel = new DroppableWidget<ShowMorePagerPanel>(
-				pagerPanel);
-		// setup the drop operation
-		// droppabelPanel.setDroppableHoverClass("orange-border");
-		// droppabelPanel.setActiveClass("yellow-border");
-		droppabelPanel.addDropHandler(new DropHandler());
-		// use an AcceptFunction to accept only draggable coming from an other
-		// panel
-		droppabelPanel.setAccept(new AcceptFunction() {
-
-			public boolean acceptDrop(DragAndDropContext ctx) {
-				// retrieve the dragging ContactInfo
-				ContactInfo draggedContact = ctx.getDraggableData();
-				Category dragCategory = draggedContact.getCategory();
-				// accept only contact coming from an other panel.
-				return dragCategory != category;
-			}
-
-		});
-
-		return droppabelPanel;
+		return pagerPanel;
 	}
 }
