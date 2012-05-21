@@ -114,9 +114,10 @@ public class TransactionsPanel extends Composite {
 		public void onSuccess(Page<Transaction> page) {
 			final int start = page.getPageRequest().getPageNumber()
 					* page.getPageRequest().getPageSize();
-			transactionListPanel.setTotalRowCount(page.getTotal());
+			transactionAsyncDataProvider.updateRowCount((int) page.getTotal(), true);
 			transactionAsyncDataProvider
 					.updateRowData(start, page.getContent());
+			updateHeading();
 		}
 
 	};
@@ -128,20 +129,11 @@ public class TransactionsPanel extends Composite {
 		protected void onRangeChanged(HasData<Transaction> display) {
 			final Range range = display.getVisibleRange();
 			System.out.println("*** range " + range + " " + new Date());
-			int start = range.getStart();
 			int length = range.getLength();
-			List<Transaction> newData = new ArrayList<Transaction>();
-
-			PageRequest pageRequest = new PageRequest(0, length);
-			final String userId = TransactionsPanel.this.dashboard.getUser()
-					.getId();
-			final List<Long> accountIds = newArrayList(TransactionsPanel.this.selectedAccount
-					.getBankId());
-			TransactionsPanel.this.transactionService
-					.findTransactionsByAccountIdsByPeriod(pageRequest, userId,
-							accountIds, getPeriod(), getTransactionsCallback);
-
-			this.updateRowData(start, newData);
+			// see http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division for an explanation of the following computation
+			int pageNumber = (length + ShowMorePagerPanel.DEFAULT_INCREMENT - 1) / ShowMorePagerPanel.DEFAULT_INCREMENT - 1;
+			int pageSize = ShowMorePagerPanel.DEFAULT_INCREMENT;
+			updateList(pageNumber, pageSize);
 		}
 	}
 
@@ -154,6 +146,14 @@ public class TransactionsPanel extends Composite {
 	private Dashboard dashboard;
 
 	private ShowMorePagerPanel transactionListPanel;
+
+	private List<Long> searchAccountIds;
+
+	private Period searchedPeriod;
+	
+	private String searchedTransactionLabelPart;
+
+	private DragAndDropCellList<Transaction> cellList;
 
 	/**
 	 * The Cell used to render a {@link Transaction}.
@@ -188,23 +188,54 @@ public class TransactionsPanel extends Composite {
 			public void onClick(ClickEvent event) {
 				System.out.println("Account: " + selectedAccount);
 				System.out.println("Search text: " + searchTextBox.getText());
-				updateHeading();
+				initSearchFields();
+				TransactionsPanel.this.cellList.setVisibleRangeAndClearData(new Range(0, ShowMorePagerPanel.DEFAULT_INCREMENT), true);
 			}
 		});
 
-		 transactionListPanel = createList();
+		initSearchFields();
+		
+		transactionListPanel = createList();
 		cellPanel.add(transactionListPanel);
 	}
 	
+	private void initSearchFields() {
+		searchAccountIds = getAccountIds(selectedAccount);
+		searchedPeriod = getPeriod();
+		searchedTransactionLabelPart = this.searchTextBox.getText();
+	}
+	
+	private List<Long> getAccountIds(Account account) {
+		List<Long> accountIds = newArrayList();
+		List<Account> accounts = account.getBankId() == null ? dashboard.getUser().getCustomer().getAccounts() : newArrayList(account);
+		for (Account currentAccount : accounts) {
+			accountIds.add(currentAccount.getBankId());
+		}
+		return accountIds;
+	}
+
 	private Period getPeriod() {
-		Date startDate = new Date(2012 - 1900, 1 - 1, 1);
-		Date endDate = new Date(2012 - 1900, 1 - 1, 31);
+		Date startDate = new Date(2007 - 1900, 1 - 1, 1);
+		Date endDate = new Date(2012 - 1900, 2 - 1, 1);
 		return new Period(startDate, endDate);
+	}
+	
+	private void updateList(final int pageNumber, final int pageSize) {
+		PageRequest pageRequest = new PageRequest(pageNumber, pageSize);
+		final String customerId = TransactionsPanel.this.dashboard
+				.getUser().getCustomer().getId();
+		TransactionsPanel.this.transactionService
+				.findTransactionsByCustomerIdByAccountIdsByPeriod(
+						customerId, searchAccountIds, searchedPeriod, searchedTransactionLabelPart, pageRequest,
+						getTransactionsCallback);
 	}
 
 	private void updateHeading() {
 		final StringBuilder html = new StringBuilder();
-		html.append("transactions appartenant à <b>");
+		int rowCount = TransactionsPanel.this.cellList == null ? 0 : TransactionsPanel.this.cellList.getRowCount();
+		html.append("<b>");
+		html.append(rowCount);
+		html.append("</b> transactions appartenant à <b>");
 		html.append(selectedAccount.getLabel().toLowerCase());
 		html.append("</b>");
 		if (!searchTextBox.getText().isEmpty()) {
@@ -221,7 +252,6 @@ public class TransactionsPanel extends Composite {
 	private void selectAccount(final Account account) {
 		selectedAccount = account;
 		accountButtonLabel.setText(selectedAccount.getLabel().toLowerCase());
-		updateHeading();
 	}
 
 	private void initializeAccountsListBox(List<Account> accounts) {
@@ -274,14 +304,14 @@ public class TransactionsPanel extends Composite {
 		TransactionCell transactionCell = new TransactionCell();
 
 		// Create a drag and drop cell list
-		DragAndDropCellList<Transaction> cellList = new DragAndDropCellList<Transaction>(
+		cellList = new DragAndDropCellList<Transaction>(
 				transactionCell, TRANSACTION_KEY_PROVIDER);
 		// The cell of this cell list are only draggable
 		cellList.setCellDraggableOnly();
 		// setup the drag operation
 		cellList.setDraggableOptions(createDraggableOptions());
 
-		cellList.setPageSize(30);
+		cellList.setPageSize(ShowMorePagerPanel.DEFAULT_INCREMENT);
 		cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
 		final SingleSelectionModel<Transaction> selectionModel = new SingleSelectionModel<Transaction>(
 				TRANSACTION_KEY_PROVIDER);

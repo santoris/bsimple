@@ -11,7 +11,9 @@ import com.santoris.bsimple.page.PageRequest;
 
 @RemoteServiceRelativePath("transaction")
 public interface TransactionService extends RemoteService {
-	
-	  Page<Transaction> findTransactionsByAccountIdsByPeriod(final PageRequest pageRequest, final String userId, final List<Long> accountIds, final Period period);
-	  
+
+	Page<Transaction> findTransactionsByCustomerIdByAccountIdsByPeriod(
+			final String customerId, final List<Long> accountIds,
+			final Period period, final String labelPart, final PageRequest pageRequest);
+
 }

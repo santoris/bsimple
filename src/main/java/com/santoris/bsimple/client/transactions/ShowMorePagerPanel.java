@@ -21,7 +21,7 @@ public class ShowMorePagerPanel extends AbstractPager {
 	/**
 	 * The default increment size.
 	 */
-	private static final int DEFAULT_INCREMENT = 20;
+	public static final int DEFAULT_INCREMENT = 200;
 
 	/**
 	 * The increment size.
@@ -104,13 +104,10 @@ public class ShowMorePagerPanel extends AbstractPager {
 		this.incrementSize = incrementSize;
 	}
 
-	public void setTotalRowCount(long totalRowCount) {
-		this.totalRowCount = totalRowCount;
-	}
-
 	@Override
 	protected void onRangeOrRowCountChanged() {
 		System.out.println("*** onRangeOrRowCountChanged " + new Date());
+		this.totalRowCount = this.getDisplay().getRowCount();
 	}
 
 	private void init() {

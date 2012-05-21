@@ -10,7 +10,9 @@ import com.santoris.bsimple.page.PageRequest;
 
 public interface TransactionServiceAsync {
 
-	void findTransactionsByAccountIdsByPeriod(final PageRequest pageRequest, final String userId,
-			final List<Long> accountIds, final Period period, final AsyncCallback<Page<Transaction>> callback);
+	void findTransactionsByCustomerIdByAccountIdsByPeriod(
+			final String customerId, final List<Long> accountIds,
+			final Period period, final String labelPart, final PageRequest pageRequest,
+			final AsyncCallback<Page<Transaction>> callback);
 
 }
