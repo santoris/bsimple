@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='bsimple'>
-  <!-- Inherit the core Web Toolkit stuff.                        -->
-  <inherits name='com.google.gwt.user.User' />
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
 
-  <!-- We need the JUnit module in the main module,               -->
-  <!-- otherwise eclipse complains (Google plugin bug?)           -->
-  <inherits name='com.google.gwt.junit.JUnit' />
+	<!-- We need the JUnit module in the main module, -->
+	<!-- otherwise eclipse complains (Google plugin bug?) -->
+	<inherits name='com.google.gwt.junit.JUnit' />
 
-  <!-- Inherit the default GWT style sheet.  You can change       -->
-  <!-- the theme of your GWT application by uncommenting          -->
-  <!-- any one of the following lines.                            -->
-  <inherits name='com.google.gwt.user.theme.standard.Standard' />
-  <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-  <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+	<!-- Inherit the default GWT style sheet. You can change -->
+	<!-- the theme of your GWT application by uncommenting -->
+	<!-- any one of the following lines. -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 
-  <!-- Other module inherits                                      -->
-  <inherits name='com.github.gwtbootstrap.Bootstrap' />
-  <inherits name='gwtquery.plugins.droppable.Droppable'/>
+	<!-- Other module inherits -->
+	<inherits name='com.github.gwtbootstrap.Bootstrap' />
+	<inherits name='gwtquery.plugins.droppable.Droppable' />
+	<inherits name='com.google.common.collect.Collect' />
 
-  <!-- set responsive design -->
-  <set-property name="bootstrap.responsiveDesign" value="true"/>
+	<!-- set responsive design -->
+	<set-property name="bootstrap.responsiveDesign" value="true" />
 
-  <!-- Specify the app entry point class.                         -->
-  <entry-point class='com.santoris.bsimple.client.Bsimple' />
-	
-  <!-- Specify the paths for translatable code                    -->
-  <source path='client' />
-  <source path='shared' />
-  <source path='model' />
+	<!-- Specify the app entry point class. -->
+	<entry-point class='com.santoris.bsimple.client.Bsimple' />
+
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+	<source path='shared' />
+	<source path='model' />
+	<source path='page' />
 
 </module>

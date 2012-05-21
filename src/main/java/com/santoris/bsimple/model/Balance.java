@@ -1,5 +1,6 @@
 package com.santoris.bsimple.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -8,16 +9,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.google.common.base.Objects;
 
 @Document
-public class Balance {
-	
+public class Balance implements Serializable {
+
 	private String id;
 
 	private Date date;
-	
+
 	private Long account;
-	
+
 	private String currency;
-	
+
 	private BigDecimal amount;
 
 	public String getId() {
@@ -62,13 +63,9 @@ public class Balance {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this)
-				.add("id", id)
-				.add("date", date)
-				.add("account", account)
-				.add("currency", currency)
-				.add("amount", amount)
-				.toString();
+		return Objects.toStringHelper(this).add("id", id).add("date", date)
+				.add("account", account).add("currency", currency)
+				.add("amount", amount).toString();
 	}
 
 }

@@ -39,6 +39,10 @@
 			width: 98%;
 		}
 		
+		.loginCustomer {
+			width: 100%;
+		}
+		
 		.loginCustomerSelect {
 			margin-top: 10px;
 		}
@@ -52,7 +56,14 @@
 			margin-bottom: 0px;
 			text-align: right;
 		}
+		
+		.loading {
+			float: left;
+		}
 	</ui:style>
+
+	<ui:with field='res' type='com.santoris.bsimple.client.Resources' />
+
 	<g:FlowPanel>
 		<b:FluidContainer ui:field="container">
 			<g:FlowPanel styleName="{style.videoPanel}">
@@ -65,13 +76,19 @@
 						<b:ControlGroup>
 							<b:HelpBlock>Enter un nouveau nom d'utilisateur pour partir de
 								zéro ou un nom précédemment saisi pour retrouver vos données:</b:HelpBlock>
-							<b:TextBox placeholder="Nom d'utilisateur" ui:field="loginTextBox" />
+							<b:TextBox placeholder="Nom d'utilisateur" ui:field="loginTextBox"
+								styleName="{style.loginLogin}" />
 						</b:ControlGroup>
 						<b:ControlGroup>
 							<b:HelpBlock>Sélectionner un client de test:</b:HelpBlock>
-							<g:ListBox enabled="false" ui:field="customerListBox" />
+							<g:ListBox enabled="false" ui:field="customerListBox"
+								styleName="{style.loginCustomer}" />
 						</b:ControlGroup>
 						<g:FlowPanel styleName="form-actions {style.loginActions}">
+							<g:HTMLPanel ui:field="loadingPanel" visible="false" styleName="{style.loading}">
+								<span>Création du nouveau compte...</span>
+								<g:Image resource='{res.loader}' ui:field="loaderImage" />
+							</g:HTMLPanel>
 							<b:SubmitButton enabled="false" addStyleNames="btn"
 								type="PRIMARY" ui:field="connectionButton">Connection</b:SubmitButton>
 						</g:FlowPanel>

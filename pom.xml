@@ -116,7 +116,12 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>11.0.2</version>
+			<version>12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava-gwt</artifactId>
+			<version>12.0</version>
 		</dependency>
 
 		<!-- Run -->
@@ -255,13 +260,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- <dependency> -->
-		<!-- <groupId>com.googlecode.gwtquery.bundles</groupId> -->
-		<!-- <artifactId>gquery-dnd-bundle</artifactId> -->
-		<!-- <version>1.0.5</version> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
-
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
@@ -272,6 +270,12 @@
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>${mongo.java.driver.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.5.2</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -304,13 +308,13 @@
 						</manifestEntries>
 					</archive>
 					<webResources>
-						<webResource>
-							<!-- Adds ${buildNumber} to header.jsp (i.e. 1st line of the head 
-								of index.html) -->
-							<directory>${basedir}/src/main/webapp/jsp</directory>
-							<targetPath>jsp</targetPath>
+						<resource>
+							<directory>${basedir}/src/main/webapp</directory>
 							<filtering>true</filtering>
-						</webResource>
+							<includes>
+								<include>bsimple.html</include>
+							</includes>
+						</resource>
 					</webResources>
 				</configuration>
 			</plugin>

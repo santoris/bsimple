@@ -2,7 +2,6 @@ package com.santoris.bsimple.model;
 
 import java.io.Serializable;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.google.common.base.Objects;

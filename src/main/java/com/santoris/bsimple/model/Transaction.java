@@ -1,5 +1,6 @@
 package com.santoris.bsimple.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -8,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.google.common.base.Objects;
 
 @Document
-public class Transaction {
+public class Transaction implements Serializable {
 
 	private String id;
 
@@ -27,6 +28,8 @@ public class Transaction {
 	private BigDecimal amount;
 
 	private String label;
+
+	private String locationCity;
 
 	private boolean oustanding;
 
@@ -102,6 +105,14 @@ public class Transaction {
 		this.label = label;
 	}
 
+	public String getLocationCity() {
+		return locationCity;
+	}
+
+	public void setLocationCity(String locationCity) {
+		this.locationCity = locationCity;
+	}
+	
 	public boolean isOustanding() {
 		return oustanding;
 	}
@@ -122,6 +133,7 @@ public class Transaction {
 				.add("currency", currency)
 				.add("amount", amount)
 				.add("label", label)
+				.add("locationCity", locationCity)
 				.add("oustanding", oustanding)
 				.toString();
 	}

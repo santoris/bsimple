@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.springframework.data.annotation.Id;
 
 /**
  * https://developer.axabanque.fr/api/resource_TransactionService.html#path__transactions_-uid-.html
