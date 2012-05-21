@@ -9,6 +9,19 @@
 		.social li {
 			display: inline !important;
 		}
+		
+		.largestContainer {
+			margin-left: 0px;
+		}
+		
+		.transactionColumn {
+			position: fixed;
+			width: 300px;
+		}
+		
+		.dashboardColumn {
+			margin-left: 340px;
+		}
 	</ui:style>
 	<g:FlowPanel>
 		<b:ResponsiveNavbar position="TOP" scrollspy="true">
@@ -20,16 +33,17 @@
 
 		<b:FluidContainer ui:field="container">
 			<b:FluidRow>
-				<b:Column size="9">
-					<g:FlowPanel ui:field="pursesContainer" />
-				</b:Column>
-				<b:Column size="3" styleName="pull-right">
+				<b:Column size="1" stylePrimaryName="{style.transactionColumn}">
 					<g:FlowPanel ui:field="transactionsContainer" />
+				</b:Column>
+				<!-- <b:Column size="9" styleName="pull-right"> -->
+				<b:Column size="12" stylePrimaryName="{style.dashboardColumn}">
+					<g:FlowPanel ui:field="pursesContainer" />
 				</b:Column>
 			</b:FluidRow>
 
-<!-- 			<b:Footer> -->
-<!-- 			</b:Footer> -->
+			<!-- <b:Footer> -->
+			<!-- </b:Footer> -->
 		</b:FluidContainer>
 	</g:FlowPanel>
 </ui:UiBinder>

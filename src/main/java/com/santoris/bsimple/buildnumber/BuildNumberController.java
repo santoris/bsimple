@@ -1,12 +1,12 @@
 package com.santoris.bsimple.buildnumber;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * A simple Spring controller that publishes the build number information.

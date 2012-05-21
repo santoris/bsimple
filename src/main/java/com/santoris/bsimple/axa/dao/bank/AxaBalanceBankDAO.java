@@ -12,8 +12,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.santoris.bsimple.axa.model.AxaBalance;
 import com.santoris.bsimple.axa.model.AxaBalancesWrapper;
-import com.santoris.bsimple.axa.model.AxaTransaction;
-import com.santoris.bsimple.axa.model.AxaTransactionsWrapper;
 import com.santoris.bsimple.helpers.BSimpleConstant;
 
 @Repository

@@ -4,6 +4,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.santoris.bsimple.axa.model.AxaTransaction;
 
-public interface AxaTransactionRepository extends MongoRepository<AxaTransaction, Long> {
-
+public interface AxaTransactionRepository extends MongoRepository<AxaTransaction, Long>, AxaTransactionRepositoryCustom {
+	
 }

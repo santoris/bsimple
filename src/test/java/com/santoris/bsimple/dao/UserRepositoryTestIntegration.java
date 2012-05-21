@@ -1,4 +1,4 @@
-package com.santoris.bsimple.dao.bsimple.dao;
+package com.santoris.bsimple.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

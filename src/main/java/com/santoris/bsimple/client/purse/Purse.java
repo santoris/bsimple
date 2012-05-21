@@ -1,6 +1,5 @@
 package com.santoris.bsimple.client.purse;
 
-
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -8,7 +7,6 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
-
 
 public class Purse extends Composite {
 	private Double amount = 0.0;
@@ -60,7 +58,7 @@ public class Purse extends Composite {
 
 		FlowPanel purseWrapper = new FlowPanel();
 		purseWrapper.add(purse);
-		purseWrapper.addStyleName("pagerWrapper");
+		purseWrapper.addStyleName("pursePagerWrapper");
 
 		return purseWrapper;
 	}

@@ -1,6 +1,8 @@
 package com.santoris.bsimple.model;
 
-public class IBAN {
+import java.io.Serializable;
+
+public class IBAN  implements Serializable  {
 	
 	final static private String IBAN_LABEL_SAMPLE = "FR70 3000 2005 5000 0015 7845 Z02";
 	

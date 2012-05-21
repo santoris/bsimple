@@ -16,6 +16,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -31,8 +33,14 @@ public class Bsimple extends Composite implements EntryPoint {
 			{ "1000001", "Antonin" }, { "1000002", "Lea" },
 			{ "1500000", "Martin" } };
 
-	private static final Map<String, Integer> CUSTOMER_LIST_BOX_INDEX_BY_BANK_CUSTOMER_ID = new HashMap<String, Integer>();
+	private final Map<String, Integer> customerListBoxIndexByBankCustomerId = new HashMap<String, Integer>();
 
+	@UiField
+	HTMLPanel loadingPanel;
+	
+	@UiField
+	Image loaderImage;
+	
 	@UiField
 	protected FocusWidget connectionButton;
 
@@ -41,6 +49,8 @@ public class Bsimple extends Composite implements EntryPoint {
 
 	@UiField
 	protected ListBox customerListBox;
+	
+	private boolean newLogin;
 
 	private final UserServiceAsync userService = GWT.create(UserService.class);
 
@@ -80,10 +90,12 @@ public class Bsimple extends Composite implements EntryPoint {
 		@Override
 		public void onSuccess(Long customerId) {
 			if (customerId == null) {
+				newLogin = true;
 				customerListBox.setEnabled(true);
 			} else {
+				newLogin = false;
 				customerListBox.setEnabled(false);
-				Integer index = CUSTOMER_LIST_BOX_INDEX_BY_BANK_CUSTOMER_ID.get(String.valueOf(customerId));
+				Integer index = customerListBoxIndexByBankCustomerId.get(String.valueOf(customerId));
 				customerListBox.setSelectedIndex(index);
 			}
 		}
@@ -94,10 +106,12 @@ public class Bsimple extends Composite implements EntryPoint {
 
 		@Override
 		public void onFailure(Throwable caught) {
+			loadingPanel.setVisible(false);
 		}
 
 		@Override
 		public void onSuccess(Dashboard dashboard) {
+			loadingPanel.setVisible(false);
 			displayDashboard(dashboard);
 		}
 		
@@ -126,6 +140,8 @@ public class Bsimple extends Composite implements EntryPoint {
 		loginTextBox.addKeyUpHandler(loginKeyUpHandler);
 		
 		RootPanel.get("content").add(this);
+		
+		dashboardService.getDashboard("thierry", Long.valueOf("1000001"), getDashboardCallback);
 	}
 
 	private void initializeCustomerListBox() {
@@ -134,7 +150,7 @@ public class Bsimple extends Composite implements EntryPoint {
 			String bankCustomerId = customer[0];
 			String customerName = customer[1];
 			customerListBox.addItem(customerName, bankCustomerId);
-			CUSTOMER_LIST_BOX_INDEX_BY_BANK_CUSTOMER_ID.put(bankCustomerId,
+			customerListBoxIndexByBankCustomerId.put(bankCustomerId,
 					index);
 			index++;
 		}
@@ -146,6 +162,11 @@ public class Bsimple extends Composite implements EntryPoint {
 		final int customerIndex = customerListBox.getSelectedIndex();
 		final String customerId = customerListBox.getValue(customerIndex);
 		
+		if (this.newLogin) {
+			loadingPanel.setVisible(true);
+			loaderImage.getElement().focus();
+		}
+
 		dashboardService.getDashboard(login, Long.valueOf(customerId), getDashboardCallback);
 	}
 
