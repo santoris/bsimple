@@ -16,11 +16,21 @@
 		
 		.transactionColumn {
 			position: fixed;
-			width: 300px;
+			width: 366px;
+			height: 96%;
+		}
+		
+		.transactionContainer {
+			height: 96%;
 		}
 		
 		.dashboardColumn {
-			margin-left: 340px;
+			height: 96%;
+			margin-left: 385px;
+		}
+
+		.pursesContainer {
+			height: 96%;
 		}
 	</ui:style>
 	<g:FlowPanel>
@@ -34,11 +44,11 @@
 		<b:FluidContainer ui:field="container">
 			<b:FluidRow>
 				<b:Column size="1" stylePrimaryName="{style.transactionColumn}">
-					<g:FlowPanel ui:field="transactionsContainer" />
+					<g:FlowPanel ui:field="transactionsContainer" stylePrimaryName="{style.transactionContainer}"/>
 				</b:Column>
 				<!-- <b:Column size="9" styleName="pull-right"> -->
 				<b:Column size="12" stylePrimaryName="{style.dashboardColumn}">
-					<g:FlowPanel ui:field="pursesContainer" />
+					<g:FlowPanel ui:field="pursesContainer" stylePrimaryName="{style.transactionContainer}" />
 				</b:Column>
 			</b:FluidRow>
 

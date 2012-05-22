@@ -112,6 +112,7 @@ public class ShowMorePagerPanel extends AbstractPager {
 
 	private void init() {
 		FlowPanel p = new FlowPanel();
+		p.addStyleName("transactionsPagerContainer");
 		p.add(scrollable);
 		scrollable.addStyleName("transactionPager");
 		initWidget(p);
