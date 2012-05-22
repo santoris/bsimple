@@ -271,12 +271,6 @@
 			<artifactId>mongo-java-driver</artifactId>
 			<version>${mongo.java.driver.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-			<version>2.5.2</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
@@ -315,6 +309,10 @@
 								<include>bsimple.html</include>
 							</includes>
 						</resource>
+						<webResource>
+							<directory>${basedir}/src/main/webapp/images</directory>
+							<targetPath>images</targetPath>
+						</webResource>
 					</webResources>
 				</configuration>
 			</plugin>
