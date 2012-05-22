@@ -20,11 +20,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
+import com.google.gwt.resources.client.CssResource.ImportedWithPrefix;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.CellList.Resources;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
@@ -37,6 +42,8 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.santoris.bsimple.client.purse.Purse;
+import com.santoris.bsimple.client.purse.PursesPanel;
 import com.santoris.bsimple.client.service.TransactionService;
 import com.santoris.bsimple.client.service.TransactionServiceAsync;
 import com.santoris.bsimple.client.widget.DropdownHTMLEntry;
@@ -68,7 +75,7 @@ public class TransactionsPanel extends Composite {
 	protected Button searchButton;
 
 	@UiField
-	protected FlowPanel cellPanel;
+	protected FlowPanel transactionsListPanel;
 
 	private static TransactionsPanelUiBinder uiBinder = GWT
 			.create(TransactionsPanelUiBinder.class);
@@ -92,6 +99,14 @@ public class TransactionsPanel extends Composite {
 	private static final AccountListEntryTemplates ACCOUNT_LIST_ENTRY_TEMPLATES = GWT
 			.create(AccountListEntryTemplates.class);
 
+	protected interface TransactionEntryTemplates extends SafeHtmlTemplates {
+		@Template(" <div class=\"badge badge-{0}\" style=\"float: right;font-size:13px;font-family:sans-serif;margin-top:1px; margin-right:2px\">{1}</div>")
+		SafeHtml amount(String amountColorCssSuffix, String amount);
+	}
+	
+	private static final TransactionEntryTemplates TRANSACTION_ENTRY_TEMPLATES = GWT
+			.create(TransactionEntryTemplates.class);
+
 	/**
 	 * The key provider that provides the unique ID of a transaction.
 	 */
@@ -100,7 +115,7 @@ public class TransactionsPanel extends Composite {
 			return item == null ? null : item.getId();
 		}
 	};
-
+	
 	private final TransactionServiceAsync transactionService = GWT
 			.create(TransactionService.class);
 
@@ -114,7 +129,8 @@ public class TransactionsPanel extends Composite {
 		public void onSuccess(Page<Transaction> page) {
 			final int start = page.getPageRequest().getPageNumber()
 					* page.getPageRequest().getPageSize();
-			transactionAsyncDataProvider.updateRowCount((int) page.getTotal(), true);
+			transactionAsyncDataProvider.updateRowCount((int) page.getTotal(),
+					true);
 			transactionAsyncDataProvider
 					.updateRowData(start, page.getContent());
 			updateHeading();
@@ -130,12 +146,17 @@ public class TransactionsPanel extends Composite {
 			final Range range = display.getVisibleRange();
 			System.out.println("*** range " + range + " " + new Date());
 			int length = range.getLength();
-			// see http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division for an explanation of the following computation
-			int pageNumber = (length + ShowMorePagerPanel.DEFAULT_INCREMENT - 1) / ShowMorePagerPanel.DEFAULT_INCREMENT - 1;
+			// see
+			// http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
+			// for an explanation of the following computation
+			int pageNumber = (length + ShowMorePagerPanel.DEFAULT_INCREMENT - 1)
+					/ ShowMorePagerPanel.DEFAULT_INCREMENT - 1;
 			int pageSize = ShowMorePagerPanel.DEFAULT_INCREMENT;
 			updateList(pageNumber, pageSize);
 		}
 	}
+
+	private final static DateTimeFormat DATE_FORMAT = DateTimeFormat.getFormat("d MMM yyyy");
 
 	private AsyncDataProvider<Transaction> transactionAsyncDataProvider = new TransactionAsyncDataProvider();
 
@@ -150,7 +171,7 @@ public class TransactionsPanel extends Composite {
 	private List<Long> searchAccountIds;
 
 	private Period searchedPeriod;
-	
+
 	private String searchedTransactionLabelPart;
 
 	private DragAndDropCellList<Transaction> cellList;
@@ -159,7 +180,6 @@ public class TransactionsPanel extends Composite {
 	 * The Cell used to render a {@link Transaction}.
 	 */
 	private static class TransactionCell extends AbstractCell<Transaction> {
-
 		@Override
 		public void render(Context context, Transaction value,
 				SafeHtmlBuilder sb) {
@@ -168,11 +188,35 @@ public class TransactionsPanel extends Composite {
 				return;
 			}
 
-			sb.appendHtmlConstant("<table>");
-			sb.appendHtmlConstant("<tr><td style='font-size:95%;'>");
-			sb.appendEscaped(value.getLabel());
-			sb.appendHtmlConstant("</td></tr><tr><td>");
-			sb.appendEscaped(value.getAmount().toString());
+			String date =  DATE_FORMAT.format(value.getDate());
+			
+			sb.appendHtmlConstant("<table><tr><td>");
+			sb.appendHtmlConstant("<div style=\"float:left; border: 1px solid #DDDDDD; padding: 3px; margin-top: -3px;margin-left: -2px;\">");
+			sb.appendHtmlConstant("    <div style=\"width:300px; float:left;\">");
+			sb.appendHtmlConstant("      <div style=\"margin-top:1px; \">");
+			sb.appendHtmlConstant("          <div style=\"float:left; font-family:sans-serif;width:220px\"><b>");
+			sb.appendEscaped(value.getLabel().toLowerCase());
+			sb.appendHtmlConstant("</b></div>");
+			sb.appendHtmlConstant("        <div style=\"text-align:right; color:#555\">");
+			sb.appendHtmlConstant(date);
+			sb.appendHtmlConstant("        </div>");
+			sb.appendHtmlConstant("      </div>");
+			sb.appendHtmlConstant("    <div id=\"categories\" style=\"width:300px; float:left;\">");
+			
+			List<Purse> purses = PursesPanel.INSTANCE.getPursesByTransactionId(value.getId());
+			if (purses != null) {
+				for (Purse purse : purses) {
+					sb.appendHtmlConstant("      <div class=\"label label-info\" style=\"float: left; margin-top:1px; margin-right:2px\">");
+					sb.appendEscaped(purse.getCategoryName());
+					sb.appendHtmlConstant("      </div>");
+				}
+			}
+
+
+			sb.appendHtmlConstant(TRANSACTION_ENTRY_TEMPLATES.amount(value.getAmount().signum() < 0 ? "important" : "success", value.getAmount().setScale(2).toString()).asString());
+
+			sb.appendHtmlConstant("    </div>");
+			sb.appendHtmlConstant("</div>");
 			sb.appendHtmlConstant("</td></tr></table>");
 		}
 	}
@@ -189,25 +233,28 @@ public class TransactionsPanel extends Composite {
 				System.out.println("Account: " + selectedAccount);
 				System.out.println("Search text: " + searchTextBox.getText());
 				initSearchFields();
-				TransactionsPanel.this.cellList.setVisibleRangeAndClearData(new Range(0, ShowMorePagerPanel.DEFAULT_INCREMENT), true);
+				TransactionsPanel.this.cellList.setVisibleRangeAndClearData(
+						new Range(0, ShowMorePagerPanel.DEFAULT_INCREMENT),
+						true);
 			}
 		});
 
 		initSearchFields();
-		
+
 		transactionListPanel = createList();
-		cellPanel.add(transactionListPanel);
+		transactionsListPanel.add(transactionListPanel);
 	}
-	
+
 	private void initSearchFields() {
 		searchAccountIds = getAccountIds(selectedAccount);
 		searchedPeriod = getPeriod();
 		searchedTransactionLabelPart = this.searchTextBox.getText();
 	}
-	
+
 	private List<Long> getAccountIds(Account account) {
 		List<Long> accountIds = newArrayList();
-		List<Account> accounts = account.getBankId() == null ? dashboard.getUser().getCustomer().getAccounts() : newArrayList(account);
+		List<Account> accounts = account.getBankId() == null ? dashboard
+				.getUser().getCustomer().getAccounts() : newArrayList(account);
 		for (Account currentAccount : accounts) {
 			accountIds.add(currentAccount.getBankId());
 		}
@@ -215,24 +262,26 @@ public class TransactionsPanel extends Composite {
 	}
 
 	private Period getPeriod() {
-		Date startDate = new Date(2007 - 1900, 1 - 1, 1);
+		Date startDate = new Date(2011 - 1900, 7 - 1, 1);
 		Date endDate = new Date(2012 - 1900, 2 - 1, 1);
 		return new Period(startDate, endDate);
 	}
-	
+
 	private void updateList(final int pageNumber, final int pageSize) {
 		PageRequest pageRequest = new PageRequest(pageNumber, pageSize);
-		final String customerId = TransactionsPanel.this.dashboard
-				.getUser().getCustomer().getId();
+		final String customerId = TransactionsPanel.this.dashboard.getUser()
+				.getCustomer().getId();
 		TransactionsPanel.this.transactionService
-				.findTransactionsByCustomerIdByAccountIdsByPeriod(
-						customerId, searchAccountIds, searchedPeriod, searchedTransactionLabelPart, pageRequest,
+				.findTransactionsByCustomerIdByAccountIdsByPeriod(customerId,
+						searchAccountIds, searchedPeriod,
+						searchedTransactionLabelPart, pageRequest,
 						getTransactionsCallback);
 	}
 
 	private void updateHeading() {
 		final StringBuilder html = new StringBuilder();
-		int rowCount = TransactionsPanel.this.cellList == null ? 0 : TransactionsPanel.this.cellList.getRowCount();
+		int rowCount = TransactionsPanel.this.cellList == null ? 0
+				: TransactionsPanel.this.cellList.getRowCount();
 		html.append("<b>");
 		html.append(rowCount);
 		html.append("</b> transactions appartenant à <b>");
@@ -242,8 +291,9 @@ public class TransactionsPanel extends Composite {
 			html.append(" contenant <b>");
 			html.append(searchTextBox.getText());
 		}
-		html.append("</b>");
-		html.append(" au cours du mois de <b>mai</b>:");
+		// FIXME when the user could define himself the period
+//		html.append("</b>");
+//		html.append(" au cours du mois de <b>mai</b>:");
 
 		this.transactionListsDescription.getElement().setInnerHTML(
 				html.toString());
@@ -304,8 +354,8 @@ public class TransactionsPanel extends Composite {
 		TransactionCell transactionCell = new TransactionCell();
 
 		// Create a drag and drop cell list
-		cellList = new DragAndDropCellList<Transaction>(
-				transactionCell, TRANSACTION_KEY_PROVIDER);
+		cellList = new DragAndDropCellList<Transaction>(transactionCell,
+				TRANSACTION_KEY_PROVIDER);
 		// The cell of this cell list are only draggable
 		cellList.setCellDraggableOnly();
 		// setup the drag operation

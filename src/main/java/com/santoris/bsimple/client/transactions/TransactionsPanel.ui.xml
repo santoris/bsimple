@@ -7,6 +7,7 @@
 		.panel {
 			padding-left: 19px;
 			padding-right: 38px;
+			height: 96%;
 		}
 		
 		.heading {
@@ -33,6 +34,14 @@
 			margin-bottom: 10px;
 			width: 105%;
 		}
+
+		.transactionsListControlGroup {
+			height: 96%;
+		}
+		
+		.transactionsListPanel {
+			height: 96%;
+		}
 	</ui:style>
 
 	<g:FlowPanel styleName="well {style.panel}">
@@ -56,10 +65,10 @@
 		<g:FlowPanel styleName="{style.searchButton}">
 			<b:Button ui:field="searchButton" text="recherche" type="PRIMARY" />
 		</g:FlowPanel>
-		<b:ControlGroup>
+		<b:ControlGroup styleName="{style.transactionsListControlGroup}" >
 			<b:Legend ui:field="transactionListsDescription" styleName="{style.transactionListsDescription}" />
 			<b:Heading size="3" ui:field="heading" />
-			<g:FlowPanel ui:field="cellPanel" />
+			<g:FlowPanel ui:field="transactionsListPanel" styleName="{style.transactionsListPanel}" />
 		</b:ControlGroup>
 	</g:FlowPanel>
 </ui:UiBinder>
