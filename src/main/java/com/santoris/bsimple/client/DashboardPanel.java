@@ -64,8 +64,6 @@ public class DashboardPanel extends Composite {
 
 	private TransactionsPanel transactionsPanel;
 	
-	private List<NavLink> endDateNavLinkList = newArrayList();
-	
 	private Date selectedStartDate;
 
 	private Date selectedEndDate;
@@ -82,8 +80,13 @@ public class DashboardPanel extends Composite {
 		@Override
 		public void onClick(ClickEvent event) {
 			startDateLabel.setText(formatDate(date));
-			reinitializeEndDateList(index);
 			selectedStartDate = date;
+			
+			if (selectedStartDate.after(selectedEndDate) || selectedStartDate.equals(selectedEndDate)) {
+				selectedEndDate = addOneMonth(selectedStartDate);
+				endDateLabel.setText(formatDate(selectedStartDate));
+			}
+			
 			onPeriodChanged();
 		}
 	}
@@ -97,8 +100,14 @@ public class DashboardPanel extends Composite {
 		
 		@Override
 		public void onClick(ClickEvent event) {
-			endDateLabel.setText(formatDate(date));
+			endDateLabel.setText(formatDate(removeOneMonth(date)));
 			selectedEndDate = date;
+			
+			if (selectedStartDate.after(selectedEndDate) || selectedStartDate.equals(selectedEndDate)) {
+				selectedStartDate = removeOneMonth(selectedEndDate);
+				startDateLabel.setText(formatDate(selectedStartDate));
+			}
+			
 			onPeriodChanged();
 		}
 	}
@@ -131,15 +140,7 @@ public class DashboardPanel extends Composite {
 		
 		return dates;
 	}
-	
-	private void reinitializeEndDateList(int startIndex) {
-		for (int i = startIndex; i < NB_OF_AVAILABLE_MONTHS; i++) {
-			NavLink link = endDateNavLinkList.get(i);
-			endDateList.remove(link);
-			endDateList.add(link);
-		}
-	}
-	
+
 	private Date addOneMonth(Date date) {
 		final int endDateMonth;
 		final int endDateYear;
@@ -154,30 +155,47 @@ public class DashboardPanel extends Composite {
 		return new Date(endDateYear, endDateMonth, 1);
 	}
 	
+	private Date removeOneMonth(Date date) {
+		final int endDateMonth;
+		final int endDateYear;
+		if (date.getMonth() == 0) {
+			endDateMonth = 11;
+			endDateYear = date.getYear() - 1;
+		} else {
+			endDateMonth = date.getMonth() - 1;
+			endDateYear = date.getYear();
+		}
+		
+		return new Date(endDateYear, endDateMonth, 1);
+	}
+	
 	private void initializeDatesRange() {
 		List<Date> dates = getAvailableDates();
 		
 		int index = 0;
 		for (Date date : dates) {
 			String dateLabel = formatDate(date);
-			NavLink startDateLink = new NavLink(dateLabel, "");
-			NavLink endDateLink = new NavLink(dateLabel, "");
-			
-			startDateLink.addClickHandler(new StartDateClickHandler(date, index++));
+			NavLink startDateLink = new NavLink(dateLabel, "#");
+			startDateLink.addClickHandler(new StartDateClickHandler(date, index));
 			startDateList.add(startDateLink);
 			
+			NavLink endDateLink = new NavLink(dateLabel, "#");
 			Date endDate = addOneMonth(date);
 			endDateLink.addClickHandler(new EndDateClickHandler(endDate));
-			endDateNavLinkList.add(endDateLink);
+			endDateList.add(endDateLink);
+			
+			index++;
 		}
 		
 		int currentMonthDateIndex = dates.size() - 1;
 		int defaultMonthDate = currentMonthDateIndex;
 
-		reinitializeEndDateList(defaultMonthDate);
-
 		Date defaultMonth = dates.get(defaultMonthDate);
 		String defaultMonthLabel = formatDate(defaultMonth);
+		
+		selectedStartDate = defaultMonth;
+		Date endDate = addOneMonth(defaultMonth);
+		selectedEndDate = endDate;
 		
 		startDateLabel.setText(defaultMonthLabel);
 		endDateLabel.setText(defaultMonthLabel);
@@ -188,10 +206,15 @@ public class DashboardPanel extends Composite {
 		
 		initializeDatesRange();
 
+		Period period = new Period(selectedStartDate, selectedEndDate);
+		
 		pursesPanel = new PursesPanel();
 		pursesContainer.add(pursesPanel);
-		transactionsPanel = new TransactionsPanel(dashboard);
+		transactionsPanel = new TransactionsPanel(dashboard, period);
 		transactionsContainer.add(transactionsPanel);
+		
+	
+		onPeriodChanged();
 	}
 
 	private static String formatDate(Date date) {

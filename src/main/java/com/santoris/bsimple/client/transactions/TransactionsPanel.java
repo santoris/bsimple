@@ -84,8 +84,9 @@ public class TransactionsPanel extends Composite {
 			UiBinder<Widget, TransactionsPanel> {
 	}
 
-	public TransactionsPanel(Dashboard dashboard) {
+	public TransactionsPanel(Dashboard dashboard, Period period) {
 		initWidget(uiBinder.createAndBindUi(this));
+		this.period = period;
 		init(dashboard);
 	}
 
@@ -158,7 +159,7 @@ public class TransactionsPanel extends Composite {
 
 	private final static DateTimeFormat TRANSACTION_DATE_FORMAT = DateTimeFormat.getFormat("d MMM yyyy");
 
-	private static final DateTimeFormat PERIOD_DATE_FORMAT = DateTimeFormat.getFormat("MMM yyyy");
+	private static final DateTimeFormat PERIOD_DATE_FORMAT = DateTimeFormat.getFormat("MMMM yyyy");
 	
 	private AsyncDataProvider<Transaction> transactionAsyncDataProvider = new TransactionAsyncDataProvider();
 
@@ -177,6 +178,8 @@ public class TransactionsPanel extends Composite {
 	private DragAndDropCellList<Transaction> cellList;
 
 	private Period period;
+
+	private Account searchEventuallyFakeAccountId;
 
 	/**
 	 * The Cell used to render a {@link Transaction}.
@@ -244,6 +247,7 @@ public class TransactionsPanel extends Composite {
 	}
 
 	private void initSearchFields() {
+		searchEventuallyFakeAccountId = selectedAccount;
 		searchAccountIds = getAccountIds(selectedAccount);
 		searchedTransactionLabelPart = this.searchTextBox.getText();
 	}
@@ -279,6 +283,20 @@ public class TransactionsPanel extends Composite {
 		return startDate.getYear() * 12 + startDate.getMonth() + 1 == endDate.getYear() * 12 + endDate.getMonth();
 	}
 
+	private Date removeOneMonth(Date date) {
+		final int endDateMonth;
+		final int endDateYear;
+		if (date.getMonth() == 0) {
+			endDateMonth = 11;
+			endDateYear = date.getYear() - 1;
+		} else {
+			endDateMonth = date.getMonth() - 1;
+			endDateYear = date.getYear();
+		}
+		
+		return new Date(endDateYear, endDateMonth, 1);
+	}
+	
 	private void updateHeading() {
 		final StringBuilder html = new StringBuilder();
 		int rowCount = TransactionsPanel.this.cellList == null ? 0
@@ -286,21 +304,21 @@ public class TransactionsPanel extends Composite {
 		html.append("<b>");
 		html.append(rowCount);
 		html.append("</b> transactions appartenant à <b>");
-		html.append(selectedAccount.getLabel().toLowerCase());
+		html.append(searchEventuallyFakeAccountId.getLabel().toLowerCase());
 		html.append("</b>");
-		if (!searchTextBox.getText().isEmpty()) {
+		if (!searchedTransactionLabelPart.isEmpty()) {
 			html.append(" contenant <b>");
-			html.append(searchTextBox.getText());
+			html.append(searchedTransactionLabelPart);
 		}
 		html.append("</b>");
 		
 		final String periodSentencePart;
 		if (isOnlyOneMonthOfDifference(period.getStartDate(), period.getEndDate())) {
-			String dateLabel = PERIOD_DATE_FORMAT.format(period.getStartDate());
+			String dateLabel = PERIOD_DATE_FORMAT.format(period.getStartDate()).toLowerCase();
 			periodSentencePart = " au cours du mois de <b>" + dateLabel + "</b>:";
 		} else {
-			String startDateLabel = PERIOD_DATE_FORMAT.format(period.getStartDate());
-			String endDateLabel = PERIOD_DATE_FORMAT.format(period.getEndDate());		
+			String startDateLabel = PERIOD_DATE_FORMAT.format(period.getStartDate()).toLowerCase();
+			String endDateLabel = PERIOD_DATE_FORMAT.format(removeOneMonth(period.getEndDate())).toLowerCase();		
 			periodSentencePart = " durant la période de <b>" + startDateLabel + "</b> à <b>" + endDateLabel + "</b>:";
 		}
 		html.append(periodSentencePart);

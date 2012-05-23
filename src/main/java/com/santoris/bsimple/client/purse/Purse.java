@@ -112,6 +112,7 @@ public class Purse extends Composite {
 			transactionIds.add(transaction.getId());
 			transactions.add(transaction);
 			addAmount(transaction.getAmount());
+			updateLabel(amount);
 			
 			$("#categories", transactionEntryElement).append(CATEGORY_TAG_TEMPLATE.categoryTag(this.categoryName).asString());
 			
@@ -121,7 +122,6 @@ public class Purse extends Composite {
 
 	private void addAmount(BigDecimal amount) {
 		this.amount = this.amount.add(amount);
-		updateLabel(amount);
 	}
 
 	private void updateLabel(BigDecimal amount) {
@@ -144,5 +144,6 @@ public class Purse extends Composite {
 				addAmount(transaction.getAmount());
 			}
 		}
+		updateLabel(amount);
 	}
 }

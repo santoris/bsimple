@@ -42,7 +42,7 @@
 		<b:ResponsiveNavbar position="TOP" scrollspy="true">
 			<g:HTMLPanel>
 				<a href="index.html">
-					<img src="images/logo_small.jpg" />
+					<img src="images/logo_small.png" />
 				</a>
 			</g:HTMLPanel>
 			<b:NavCollapse>
