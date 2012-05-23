@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+	xmlns:b-base="urn:import:com.github.gwtbootstrap.client.ui.base">
 	<ui:style>
 		.important {
 			font-weight: bold;
@@ -13,10 +14,14 @@
 		.largestContainer {
 			margin-left: 0px;
 		}
+
+		.datesRange {
+			margin-bottom: 10px;
+		}
 		
 		.transactionColumn {
 			position: fixed;
-			width: 366px;
+			width: 367px;
 			height: 96%;
 		}
 		
@@ -28,27 +33,58 @@
 			height: 96%;
 			margin-left: 385px;
 		}
-
+		
 		.pursesContainer {
 			height: 96%;
 		}
 	</ui:style>
 	<g:FlowPanel>
 		<b:ResponsiveNavbar position="TOP" scrollspy="true">
-			<b:Brand href="#">bsimple</b:Brand>
+			<g:HTMLPanel>
+				<a href="index.html">
+					<img src="images/logo_small.jpg" />
+				</a>
+			</g:HTMLPanel>
 			<b:NavCollapse>
 				<b:Nav ui:field="nav" />
 			</b:NavCollapse>
 		</b:ResponsiveNavbar>
 
 		<b:FluidContainer ui:field="container">
+			<b:FluidRow styleName="row-fluid {style.datesRange}">
+			<g:HTMLPanel>
+					<div class="span1" style="width: 130px;">
+						<div class="btn-group">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"
+								style="width:100%">
+								<b-base:InlineLabel ui:field="startDateLabel"/>
+								<span class="caret"></span>
+							</a>
+							<b-base:UnorderedList styleName="dropdown-menu" ui:field="startDateList" />
+						</div>
+					</div>
+					<div class="span1" style="width: 130px;">
+						<div class="btn-group">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"
+								style="width:100%">
+								<b-base:InlineLabel ui:field="endDateLabel" />
+								<span class="caret" style="float:right"></span>
+							</a>
+							<b-base:UnorderedList styleName="dropdown-menu" ui:field="endDateList" />
+						</div>
+					</div>
+				</g:HTMLPanel>
+			</b:FluidRow>
+
 			<b:FluidRow>
 				<b:Column size="1" stylePrimaryName="{style.transactionColumn}">
-					<g:FlowPanel ui:field="transactionsContainer" stylePrimaryName="{style.transactionContainer}"/>
+					<g:FlowPanel ui:field="transactionsContainer"
+						stylePrimaryName="{style.transactionContainer}" />
 				</b:Column>
 				<!-- <b:Column size="9" styleName="pull-right"> -->
 				<b:Column size="12" stylePrimaryName="{style.dashboardColumn}">
-					<g:FlowPanel ui:field="pursesContainer" stylePrimaryName="{style.transactionContainer}" />
+					<g:FlowPanel ui:field="pursesContainer"
+						stylePrimaryName="{style.transactionContainer}" />
 				</b:Column>
 			</b:FluidRow>
 

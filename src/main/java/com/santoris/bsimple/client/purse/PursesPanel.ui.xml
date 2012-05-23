@@ -6,11 +6,12 @@
 	</ui:style>
 
 	<g:FlowPanel>
-		<b:Modal ui:field="createCategoryModal" title="Création d'une catégorie"
+		<b:Modal ui:field="createCategoryModal" title="création d'une catégorie"
 			backdrop="STATIC" keyboard="true" animation="true">
 			<g:FlowPanel styleName="well">
 				<b:ControlGroup>
-					<b:TextBox placeholder="Nom de la catégorie" ui:field="categoryNameTextBox" />
+					<b:ControlLabel>nom de la catégorie:</b:ControlLabel>
+					<b:TextBox ui:field="categoryNameTextBox" />
 				</b:ControlGroup>
 			</g:FlowPanel>
 			<b:ModalFooter>
@@ -18,8 +19,8 @@
 					enabled="false">Valider</b:Button>
 			</b:ModalFooter>
 		</b:Modal>
-		<b:Heading size="3" text="Tableau de bord" />
-		<b:Button type="PRIMARY" ui:field="createCategoryButton">Créer une catégorie</b:Button>
+		<b:Heading size="3" text="tableau de bord" />
+		<b:Button type="PRIMARY" ui:field="createCategoryButton">créer une catégorie</b:Button>
 		<g:FlowPanel ui:field="cellPanel" />
 	</g:FlowPanel>
 
