@@ -141,7 +141,7 @@ public class Bsimple extends Composite implements EntryPoint {
 		
 		RootPanel.get("content").add(this);
 		
-		dashboardService.getDashboard("thierry", Long.valueOf("1000001"), getDashboardCallback);
+		//dashboardService.getDashboard("thierry", Long.valueOf("1000001"), getDashboardCallback);
 	}
 
 	private void initializeCustomerListBox() {

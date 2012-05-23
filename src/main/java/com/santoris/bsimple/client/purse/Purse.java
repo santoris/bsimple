@@ -17,6 +17,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.santoris.bsimple.model.Period;
 import com.santoris.bsimple.model.Transaction;
 
 public class Purse extends Composite {
@@ -26,6 +27,7 @@ public class Purse extends Composite {
 	private HTMLPanel amountLabel;
 	
 	private Set<String> transactionIds = newHashSet();
+	private Set<Transaction> transactions = newHashSet();
 	
 	private final String categoryName;
 
@@ -108,11 +110,9 @@ public class Purse extends Composite {
 	public void addTransaction(Transaction transaction, Element transactionEntryElement) {
 		if (!transactionIds.contains(transaction.getId())) {
 			transactionIds.add(transaction.getId());
-			this.amount = this.amount.add(transaction.getAmount());
-			amountLabel.getElement().setInnerText(this.amount.setScale(2).toString());
-			amountLabel.removeStyleName("badge-important");
-			amountLabel.removeStyleName("badge-success");
-			amountLabel.addStyleName(amount.signum() < 0 ? "badge-important" : "badge-success");
+			transactions.add(transaction);
+			addAmount(transaction.getAmount());
+			updateLabel(amount);
 			
 			$("#categories", transactionEntryElement).append(CATEGORY_TAG_TEMPLATE.categoryTag(this.categoryName).asString());
 			
@@ -120,7 +120,30 @@ public class Purse extends Composite {
 		}
 	}
 
+	private void addAmount(BigDecimal amount) {
+		this.amount = this.amount.add(amount);
+	}
+
+	private void updateLabel(BigDecimal amount) {
+		amountLabel.getElement().setInnerText(this.amount.setScale(2).toString());
+		amountLabel.removeStyleName("badge-important");
+		amountLabel.removeStyleName("badge-success");
+		amountLabel.addStyleName(amount.signum() < 0 ? "badge-important" : "badge-success");
+	}
+
 	public String getCategoryName() {
 		return categoryName;
+	}
+
+	public void onPeriodChanged(Period period) {
+		this.amount = BigDecimal.ZERO;
+		for (Transaction transaction : transactions) {
+			if (transaction.getDate().after(period.getStartDate())
+					&& transaction.getDate().before(period.getEndDate())
+					|| transaction.getDate().equals(period.getStartDate())) {
+				addAmount(transaction.getAmount());
+			}
+		}
+		updateLabel(amount);
 	}
 }

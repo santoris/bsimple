@@ -21,7 +21,7 @@
 		
 		.transactionColumn {
 			position: fixed;
-			width: 367px;
+			width: 368px;
 			height: 96%;
 		}
 		
@@ -42,7 +42,7 @@
 		<b:ResponsiveNavbar position="TOP" scrollspy="true">
 			<g:HTMLPanel>
 				<a href="index.html">
-					<img src="images/logo_small.jpg" />
+					<img src="images/logo_small.png" />
 				</a>
 			</g:HTMLPanel>
 			<b:NavCollapse>
@@ -58,7 +58,7 @@
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"
 								style="width:100%">
 								<b-base:InlineLabel ui:field="startDateLabel"/>
-								<span class="caret"></span>
+								<span class="caret" style="float:right"></span>
 							</a>
 							<b-base:UnorderedList styleName="dropdown-menu" ui:field="startDateList" />
 						</div>
