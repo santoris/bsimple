@@ -68,7 +68,7 @@
 		<b:FluidContainer ui:field="container">
 			<g:FlowPanel styleName="{style.videoPanel}">
 				<g:Frame width="560px" height="315px" styleName="{style.video}"
-					url="http://www.youtube.com/embed/OFb0NaeRmdg"></g:Frame>
+					url="http://www.youtube.com/embed/aw1a9NEPd9A"></g:Frame>
 			</g:FlowPanel>
 			<b:FluidRow styleName="{style.loginOuter}">
 				<g:FlowPanel styleName="{style.loginInside}">
