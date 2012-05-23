@@ -100,7 +100,7 @@ public class TransactionsPanel extends Composite {
 			.create(AccountListEntryTemplates.class);
 
 	protected interface TransactionEntryTemplates extends SafeHtmlTemplates {
-		@Template(" <div class=\"badge badge-{0}\" style=\"float: right;font-size:13px;font-family:sans-serif;margin-top:1px; margin-right:2px\">{1}</div>")
+		@Template(" <div class=\"badge badge-{0}\" style=\"float: right;font-size:13px;margin-top:1px; margin-right:2px\">{1}</div>")
 		SafeHtml amount(String amountColorCssSuffix, String amount);
 	}
 	
@@ -194,7 +194,7 @@ public class TransactionsPanel extends Composite {
 			sb.appendHtmlConstant("<div style=\"float:left; border: 1px solid #DDDDDD; padding: 3px; margin-top: -3px;margin-left: -2px;\">");
 			sb.appendHtmlConstant("    <div style=\"width:300px; float:left;\">");
 			sb.appendHtmlConstant("      <div style=\"margin-top:1px; \">");
-			sb.appendHtmlConstant("          <div style=\"float:left; font-family:sans-serif;width:220px\"><b>");
+			sb.appendHtmlConstant("          <div style=\"float:left; width:220px\"><b>");
 			sb.appendEscaped(value.getLabel().toLowerCase());
 			sb.appendHtmlConstant("</b></div>");
 			sb.appendHtmlConstant("        <div style=\"text-align:right; color:#555\">");
