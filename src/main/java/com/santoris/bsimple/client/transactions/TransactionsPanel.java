@@ -152,12 +152,14 @@ public class TransactionsPanel extends Composite {
 			int pageNumber = (length + ShowMorePagerPanel.DEFAULT_INCREMENT - 1)
 					/ ShowMorePagerPanel.DEFAULT_INCREMENT - 1;
 			int pageSize = ShowMorePagerPanel.DEFAULT_INCREMENT;
-			updateList(pageNumber, pageSize);
+			callTheRPCServiceAndUpdateList(pageNumber, pageSize);
 		}
 	}
 
-	private final static DateTimeFormat DATE_FORMAT = DateTimeFormat.getFormat("d MMM yyyy");
+	private final static DateTimeFormat TRANSACTION_DATE_FORMAT = DateTimeFormat.getFormat("d MMM yyyy");
 
+	private static final DateTimeFormat PERIOD_DATE_FORMAT = DateTimeFormat.getFormat("MMM yyyy");
+	
 	private AsyncDataProvider<Transaction> transactionAsyncDataProvider = new TransactionAsyncDataProvider();
 
 	private final Map<Element, Account> accountByNavLinkElement = new HashMap<Element, Account>();
@@ -170,11 +172,11 @@ public class TransactionsPanel extends Composite {
 
 	private List<Long> searchAccountIds;
 
-	private Period searchedPeriod;
-
 	private String searchedTransactionLabelPart;
 
 	private DragAndDropCellList<Transaction> cellList;
+
+	private Period period;
 
 	/**
 	 * The Cell used to render a {@link Transaction}.
@@ -188,7 +190,7 @@ public class TransactionsPanel extends Composite {
 				return;
 			}
 
-			String date =  DATE_FORMAT.format(value.getDate());
+			String date =  TRANSACTION_DATE_FORMAT.format(value.getDate());
 			
 			sb.appendHtmlConstant("<table><tr><td>");
 			sb.appendHtmlConstant("<div style=\"float:left; border: 1px solid #DDDDDD; padding: 3px; margin-top: -3px;margin-left: -2px;\">");
@@ -230,12 +232,8 @@ public class TransactionsPanel extends Composite {
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				System.out.println("Account: " + selectedAccount);
-				System.out.println("Search text: " + searchTextBox.getText());
 				initSearchFields();
-				TransactionsPanel.this.cellList.setVisibleRangeAndClearData(
-						new Range(0, ShowMorePagerPanel.DEFAULT_INCREMENT),
-						true);
+				refreshCellList();
 			}
 		});
 
@@ -247,8 +245,13 @@ public class TransactionsPanel extends Composite {
 
 	private void initSearchFields() {
 		searchAccountIds = getAccountIds(selectedAccount);
-		searchedPeriod = getPeriod();
 		searchedTransactionLabelPart = this.searchTextBox.getText();
+	}
+	
+	private void refreshCellList() {
+		TransactionsPanel.this.cellList.setVisibleRangeAndClearData(
+				new Range(0, ShowMorePagerPanel.DEFAULT_INCREMENT),
+				true);
 	}
 
 	private List<Long> getAccountIds(Account account) {
@@ -261,21 +264,19 @@ public class TransactionsPanel extends Composite {
 		return accountIds;
 	}
 
-	private Period getPeriod() {
-		Date startDate = new Date(2011 - 1900, 7 - 1, 1);
-		Date endDate = new Date(2012 - 1900, 2 - 1, 1);
-		return new Period(startDate, endDate);
-	}
-
-	private void updateList(final int pageNumber, final int pageSize) {
+	private void callTheRPCServiceAndUpdateList(final int pageNumber, final int pageSize) {
 		PageRequest pageRequest = new PageRequest(pageNumber, pageSize);
 		final String customerId = TransactionsPanel.this.dashboard.getUser()
 				.getCustomer().getId();
 		TransactionsPanel.this.transactionService
 				.findTransactionsByCustomerIdByAccountIdsByPeriod(customerId,
-						searchAccountIds, searchedPeriod,
+						searchAccountIds, period,
 						searchedTransactionLabelPart, pageRequest,
 						getTransactionsCallback);
+	}
+	
+	private boolean isOnlyOneMonthOfDifference(Date startDate, Date endDate) {
+		return startDate.getYear() * 12 + startDate.getMonth() + 1 == endDate.getYear() * 12 + endDate.getMonth();
 	}
 
 	private void updateHeading() {
@@ -291,9 +292,18 @@ public class TransactionsPanel extends Composite {
 			html.append(" contenant <b>");
 			html.append(searchTextBox.getText());
 		}
-		// FIXME when the user could define himself the period
-//		html.append("</b>");
-//		html.append(" au cours du mois de <b>mai</b>:");
+		html.append("</b>");
+		
+		final String periodSentencePart;
+		if (isOnlyOneMonthOfDifference(period.getStartDate(), period.getEndDate())) {
+			String dateLabel = PERIOD_DATE_FORMAT.format(period.getStartDate());
+			periodSentencePart = " au cours du mois de <b>" + dateLabel + "</b>:";
+		} else {
+			String startDateLabel = PERIOD_DATE_FORMAT.format(period.getStartDate());
+			String endDateLabel = PERIOD_DATE_FORMAT.format(period.getEndDate());		
+			periodSentencePart = " durant la période de <b>" + startDateLabel + "</b> à <b>" + endDateLabel + "</b>:";
+		}
+		html.append(periodSentencePart);
 
 		this.transactionListsDescription.getElement().setInnerHTML(
 				html.toString());
@@ -380,4 +390,10 @@ public class TransactionsPanel extends Composite {
 
 		return pagerPanel;
 	}
+
+	public void onPeriodChanged(Period period) {
+		this.period = period;
+		refreshCellList();
+	}
+
 }
