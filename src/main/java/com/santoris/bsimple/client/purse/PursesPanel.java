@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.santoris.bsimple.model.Period;
 import com.santoris.bsimple.model.Transaction;
 
 
@@ -181,5 +182,11 @@ public class PursesPanel extends Composite {
 	
 	public List<Purse> getPursesByTransactionId(String transactionId) {
 		return pursesByTransactionId.get(transactionId);
+	}
+
+	public void onPeriodChanged(Period period) {
+		for (Purse purse : purses) {
+			purse.onPeriodChanged(period);
+		}
 	}
 }
