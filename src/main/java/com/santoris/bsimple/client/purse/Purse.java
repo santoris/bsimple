@@ -84,7 +84,7 @@ public class Purse extends Composite {
 			@Override
 			public void onMouseOver(MouseOverEvent event) {
 				//outerPurse.addStyleName("hover");
-				$(outerPurse).fadeIn(500);
+				$(outerPurse).fadeIn(150);
 			}
 		}, MouseOverEvent.getType());
 
@@ -93,7 +93,7 @@ public class Purse extends Composite {
 			@Override
 			public void onMouseOut(MouseOutEvent event) {
 				//outerPurse.removeStyleName("hover");
-				$(outerPurse).fadeOut(500);
+				$(outerPurse).fadeOut(150);
 			}
 		}, MouseOutEvent.getType());
 
