@@ -41,7 +41,7 @@
 	<g:FlowPanel>
 		<b:ResponsiveNavbar position="TOP" scrollspy="true">
 			<g:HTMLPanel>
-				<a href="index.html">
+				<a href="bsimple.html">
 					<img src="images/logo_small.png" />
 				</a>
 			</g:HTMLPanel>
