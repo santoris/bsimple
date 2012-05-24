@@ -9,11 +9,6 @@
 		.social li {
 			display: inline !important;
 		}
-
-		.logo {
-			margin-top: 20px;
-			text-align: center;
-		}
 				
 		.video {
 			border-top: none;
@@ -23,7 +18,7 @@
 		}
 		
 		.videoPanel {
-			margin-top: 20px;
+			margin-top: 50px;
 			text-align: center;
 		}
 		
@@ -71,14 +66,9 @@
 
 	<g:FlowPanel>
 		<b:FluidContainer ui:field="container">
-			<g:HTMLPanel styleName="{style.logo}">
-				<a href="bsimple.html">
-					<img src="images/logo_big.jpg" />
-				</a>
-			</g:HTMLPanel>
 			<g:FlowPanel styleName="{style.videoPanel}">
 				<g:Frame width="560px" height="315px" styleName="{style.video}"
-					url="http://www.youtube.com/embed/aw1a9NEPd9A"></g:Frame>
+					url="http://www.youtube.com/embed/DHkFWdhQgSg"></g:Frame>
 			</g:FlowPanel>
 			<b:FluidRow styleName="{style.loginOuter}">
 				<g:FlowPanel styleName="{style.loginInside}">
