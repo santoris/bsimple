@@ -5,13 +5,18 @@
 		.mainPanel {
 			margin-top: 20px;
 		}
+
+		.categoryName {
+			color: black;
+		}
 	</ui:style>
 
 	<g:FlowPanel styleName="{style.mainPanel}">
 		<b:Modal ui:field="createCategoryModal" title="création d'une catégorie"
 			backdrop="STATIC" keyboard="true" animation="true">
-			<g:FlowPanel styleName="well">
-				<b:TextBox placeholder="nom de la catégorie" ui:field="categoryNameTextBox" />
+			<g:FlowPanel>
+				<b:Label text="nom de la catégorie"></b:Label>
+				<b:TextBox styleName="{style.categoryName}" ui:field="categoryNameTextBox" />
 			</g:FlowPanel>
 			<b:ModalFooter>
 				<b:Button icon="OK" type="PRIMARY" ui:field="createCategorieValidateButton"
