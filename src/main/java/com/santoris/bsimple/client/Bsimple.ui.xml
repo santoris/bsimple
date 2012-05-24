@@ -9,7 +9,12 @@
 		.social li {
 			display: inline !important;
 		}
-		
+
+		.logo {
+			margin-top: 20px;
+			text-align: center;
+		}
+				
 		.video {
 			border-top: none;
 			border-left: none;
@@ -18,7 +23,7 @@
 		}
 		
 		.videoPanel {
-			margin-top: 50px;
+			margin-top: 20px;
 			text-align: center;
 		}
 		
@@ -27,7 +32,7 @@
 			left: 50%;
 			width: 560px;
 			margin-left: -280px;
-			margin-top: 50px;
+			margin-top: 30px;
 			text-align: center;
 		}
 		
@@ -66,6 +71,11 @@
 
 	<g:FlowPanel>
 		<b:FluidContainer ui:field="container">
+			<g:HTMLPanel styleName="{style.logo}">
+				<a href="bsimple.html">
+					<img src="images/logo_big.jpg" />
+				</a>
+			</g:HTMLPanel>
 			<g:FlowPanel styleName="{style.videoPanel}">
 				<g:Frame width="560px" height="315px" styleName="{style.video}"
 					url="http://www.youtube.com/embed/aw1a9NEPd9A"></g:Frame>
