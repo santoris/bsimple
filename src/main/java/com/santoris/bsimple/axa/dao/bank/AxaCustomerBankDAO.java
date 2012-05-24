@@ -31,9 +31,9 @@ public class AxaCustomerBankDAO {
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	public AxaCustomer getCustomerById(Long customerId) {
-		AxaCustomer customer = restTemplate.getForObject(baseUrl + "/customers/{customerId}?client_id={clientId}&access_token={accessToken}",
+		AxaCustomer customer = restTemplate.getForObject(baseUrl + "/customers/{customerId}?client_id={clientId}&access_token={accessToken}&customer_id={customerId}",
 				AxaCustomer.class,
-				customerId,clientId,accessToken);
+				customerId,clientId,accessToken,customerId);
 		
 		List<AxaAccount> accounts = accountDAO.getAllAccountsByCustomer(customerId);
 		customer.setAccounts(accounts);

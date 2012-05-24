@@ -3,18 +3,15 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
 	<ui:style>
 		.mainPanel {
-                    margin-top: 20px;
-                  }
+			margin-top: 20px;
+		}
 	</ui:style>
 
 	<g:FlowPanel styleName="{style.mainPanel}">
 		<b:Modal ui:field="createCategoryModal" title="création d'une catégorie"
 			backdrop="STATIC" keyboard="true" animation="true">
 			<g:FlowPanel styleName="well">
-				<b:ControlGroup>
-					<b:ControlLabel>nom de la catégorie:</b:ControlLabel>
-					<b:TextBox ui:field="categoryNameTextBox" />
-				</b:ControlGroup>
+				<b:TextBox placeholder="nom de la catégorie" ui:field="categoryNameTextBox" />
 			</g:FlowPanel>
 			<b:ModalFooter>
 				<b:Button icon="OK" type="PRIMARY" ui:field="createCategorieValidateButton"
